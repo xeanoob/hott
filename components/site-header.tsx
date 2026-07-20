@@ -1,6 +1,6 @@
 "use client"
 
-import { User, ShoppingBag, Search, X } from "lucide-react"
+import { User, ShoppingBag, Search, X, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -13,6 +13,7 @@ export function SiteHeader() {
   const [isAccountOpen, setIsAccountOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   const [authStep, setAuthStep] = useState<"email" | "login" | "register">("email")
   const [emailValue, setEmailValue] = useState("")
@@ -54,13 +55,16 @@ export function SiteHeader() {
         setIsAtTop(false)
       }
 
-      // Check scroll direction for hide/show
-      if (currentScrollY < 10) {
+      // Check scroll direction with delta threshold to avoid jitter
+      const scrollDiff = Math.abs(currentScrollY - lastScrollY)
+      if (currentScrollY <= 80) {
         setIsVisible(true)
-      } else if (currentScrollY > lastScrollY) {
-        setIsVisible(false)
-      } else {
-        setIsVisible(true)
+      } else if (scrollDiff > 5) {
+        if (currentScrollY > lastScrollY) {
+          setIsVisible(false)
+        } else {
+          setIsVisible(true)
+        }
       }
 
       setLastScrollY(currentScrollY)
@@ -71,11 +75,11 @@ export function SiteHeader() {
   }, [lastScrollY])
 
   const linkClass = `font-sans text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 ${
-    isAtTop ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+    isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
 
   const iconClass = `transition-colors duration-300 ${
-    isAtTop ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+    isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
 
   return (
@@ -84,130 +88,152 @@ export function SiteHeader() {
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
-        isAtTop ? "bg-transparent" : "bg-white/95 backdrop-blur-sm"
+        isAtTop && !isSearchOpen ? "bg-transparent" : "bg-white/95 backdrop-blur-sm"
       }`}
     >
       <div className="mx-auto flex w-full items-center justify-between px-6 py-4 md:grid md:grid-cols-3 md:px-12 md:py-6">
-        {/* Left nav */}
-        <nav
-          aria-label="Navigation gauche"
-          className="hidden items-center gap-8 md:flex"
-        >
-          <a href="#collections" className={linkClass}>
-            Nos Collections
-          </a>
-          <a href="#histoire" className={linkClass}>
-            Histoire
-          </a>
-        </nav>
+        {/* Left: Desktop Nav / Mobile Menu Button */}
+        <div className="flex flex-1 items-center justify-start md:flex-none">
+          {/* Mobile Hamburger Menu Button */}
+          <button
+            type="button"
+            aria-label="Menu"
+            className={`md:hidden ${iconClass}`}
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu size={20} strokeWidth={1} />
+          </button>
+          
+          {/* Desktop Nav */}
+          <nav
+            aria-label="Navigation gauche"
+            className="hidden items-center gap-8 md:flex"
+          >
+            <a href="#collections" className={linkClass}>
+              Nos Collections
+            </a>
+            <a href="#histoire" className={linkClass}>
+              Histoire
+            </a>
+          </nav>
+        </div>
 
-        {/* Center logo */}
-        <div className="flex justify-start md:justify-center">
+        {/* Center: Logo */}
+        <div className="flex flex-1 justify-center md:flex-none">
           <a
             href="/"
             aria-label="HOTT — Accueil"
-            className="flex flex-col items-center justify-center gap-1"
+            className="flex items-center justify-center"
           >
             <Image 
-              src="/hott-logo.svg" 
+              src={isAtTop && !isSearchOpen ? "/7.svg" : "/7-black.svg"}
               alt="HOTT Logo" 
-              width={200} 
-              height={50} 
-              className={`h-7 w-auto transition-all duration-300 ${isAtTop ? "invert" : ""}`} 
+              width={586} 
+              height={185} 
+              unoptimized={true}
+              priority={true}
+              className="h-9 md:h-14 w-auto" 
             />
-            <span className={`font-serif text-[0.65rem] uppercase tracking-[0.2em] transition-colors duration-300 ${isAtTop ? "text-white" : "text-black"}`}>
-              HOTT
-            </span>
           </a>
         </div>
 
-        {/* Right nav */}
-        <nav
-          aria-label="Navigation droite"
-          className="flex items-center justify-end gap-6 md:gap-8"
-        >
-          <a href="#technologie" className={`hidden md:inline ${linkClass}`}>
-            Technologie
-          </a>
-          <a href="#boutique" className={`hidden md:inline ${linkClass}`}>
-            Boutique
-          </a>
-          <button
-            type="button"
-            aria-label="Recherche"
-            className={iconClass}
-            onClick={() => setIsSearchOpen(true)}
+        {/* Right: Icons & Right Nav links */}
+        <div className="flex flex-1 items-center justify-end gap-4 md:gap-8 md:flex-none">
+          <nav
+            aria-label="Navigation droite"
+            className="hidden items-center gap-8 md:flex"
           >
-            <Search size={18} strokeWidth={1} />
-          </button>
-          <button
-            type="button"
-            aria-label="Compte utilisateur"
-            className={iconClass}
-            onClick={() => setIsAccountOpen(true)}
-          >
-            <User size={18} strokeWidth={1} />
-          </button>
-          <button
-            type="button"
-            aria-label="Panier"
-            className={iconClass}
-            onClick={() => setIsCartOpen(true)}
-          >
-            <ShoppingBag size={18} strokeWidth={1} />
-          </button>
-        </nav>
-      </div>
-      </header>
-
-      {/* Search Overlay */}
-      {isSearchOpen && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm"
-          onClick={() => setIsSearchOpen(false)}
-        />
-      )}
-
-      {/* Search Panel (Top Dropdown) */}
-      <div 
-        className={`fixed inset-x-0 top-0 z-[101] flex w-full flex-col bg-white px-6 py-12 shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:px-12 ${
-          isSearchOpen ? "translate-y-0" : "-translate-y-full"
-        }`}
-      >
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-8">
-          <div className="flex items-center justify-between">
-            <h2 className="font-sans text-xs font-semibold uppercase tracking-widest text-black/60">Recherche</h2>
-            <button 
-              onClick={() => setIsSearchOpen(false)}
-              className="flex items-center gap-2 text-black/60 transition-colors hover:text-black"
+            <a href="#technologie" className={linkClass}>
+              Technologie
+            </a>
+            <a href="#boutique" className={linkClass}>
+              Boutique
+            </a>
+          </nav>
+          
+          {/* Action Icons */}
+          <div className="flex items-center gap-4 md:gap-6">
+            <button
+              type="button"
+              aria-label={isSearchOpen ? "Fermer la recherche" : "Recherche"}
+              className={iconClass}
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest">Fermer</span>
-              <X size={18} strokeWidth={1} />
+              {isSearchOpen ? (
+                <X size={18} strokeWidth={1} />
+              ) : (
+                <Search size={18} strokeWidth={1} />
+              )}
+            </button>
+            <button
+              type="button"
+              aria-label="Compte utilisateur"
+              className={iconClass}
+              onClick={() => setIsAccountOpen(true)}
+            >
+              <User size={18} strokeWidth={1} />
+            </button>
+            <button
+              type="button"
+              aria-label="Panier"
+              className={iconClass}
+              onClick={() => setIsCartOpen(true)}
+            >
+              <ShoppingBag size={18} strokeWidth={1} />
             </button>
           </div>
-          
-          <div className="relative">
-            <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-black/40" size={24} strokeWidth={1} />
-            <input 
-              type="text" 
-              placeholder="Que recherchez-vous ?"
-              className="w-full border-b border-black/20 bg-transparent py-4 pl-12 pr-4 font-sans text-2xl font-light text-black outline-none transition-colors focus:border-black placeholder:text-black/20"
-              autoFocus={isSearchOpen}
-            />
-          </div>
-          
-          <div className="mt-8">
-            <p className="font-sans text-xs font-medium uppercase tracking-widest text-black/40">Recherches populaires</p>
-            <div className="mt-4 flex flex-wrap gap-4">
-              {["WARMBIT", "Batterie", "Housse", "Application"].map((term) => (
-                <button key={term} className="border border-black/10 px-4 py-2 font-sans text-sm text-black/60 transition-colors hover:border-black hover:text-black">
-                  {term}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
+      {/* Slide-down organic search dropdown within the header element */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden border-t border-black/5 bg-white px-6 md:px-12"
+          >
+            <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 py-8">
+              <div className="relative">
+                <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-black/40" size={20} strokeWidth={1} />
+                <input 
+                  type="text" 
+                  placeholder="Que recherchez-vous ?"
+                  className="w-full border-b border-black/20 bg-transparent py-3 pl-10 pr-4 font-sans text-lg font-light text-black outline-none transition-colors focus:border-black placeholder:text-black/20"
+                  autoFocus
+                />
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <span className="font-sans text-xs font-medium uppercase tracking-widest text-black/40">Populaire :</span>
+                <div className="flex gap-3">
+                  {["WARMBIT", "Batterie", "Housse", "Application"].map((term) => (
+                    <button key={term} className="font-sans text-xs text-black/60 hover:text-black transition-colors underline underline-offset-4">
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      </header>
+
+      {/* Search backdrop page overlay */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsSearchOpen(false)}
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Account Drawer Overlay */}
       {isAccountOpen && (
@@ -333,6 +359,51 @@ export function SiteHeader() {
                 ? "Se connecter" 
                 : "Créer mon compte"}
             </motion.button>
+
+            {authStep === "email" && (
+              <motion.div layout className="flex flex-col gap-4 mt-2">
+                <div className="flex items-center gap-4 my-2">
+                  <div className="h-[1px] bg-black/10 flex-1" />
+                  <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">ou</span>
+                  <div className="h-[1px] bg-black/10 flex-1" />
+                </div>
+                
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-3 w-full border border-black/10 py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black transition-all hover:bg-black/5"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.5z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.11C3.18 21.88 7.31 24 12 24z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z"
+                    />
+                  </svg>
+                  Continuer avec Google
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-3 w-full border border-black bg-black py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-black/90"
+                >
+                  <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45" />
+                  </svg>
+                  Continuer avec Apple
+                </button>
+              </motion.div>
+            )}
           </motion.form>
           
           <AnimatePresence>
@@ -392,6 +463,67 @@ export function SiteHeader() {
             >
               Continuer mes achats
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Drawer Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Menu Drawer Panel */}
+      <div 
+        className={`fixed inset-y-0 left-0 z-[101] flex w-full max-w-xs flex-col bg-white p-8 shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <button 
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="absolute right-8 top-8 flex items-center gap-2 text-black/60 transition-colors hover:text-black"
+        >
+          <span className="font-sans text-xs font-semibold uppercase tracking-widest">Fermer</span>
+          <X size={18} strokeWidth={1} />
+        </button>
+        
+        <div className="mt-20 flex h-full flex-col justify-between">
+          <nav className="flex flex-col gap-6">
+            <a 
+              href="#collections" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
+            >
+              Nos Collections
+            </a>
+            <a 
+              href="#histoire" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
+            >
+              Histoire
+            </a>
+            <a 
+              href="#technologie" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
+            >
+              Technologie
+            </a>
+            <a 
+              href="#boutique" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
+            >
+              Boutique
+            </a>
+          </nav>
+          
+          <div className="border-t border-black/10 pt-6">
+            <p className="font-sans text-xs text-black/40 uppercase tracking-widest">HOTT Équitation</p>
+            <p className="mt-2 font-sans text-xs text-black/60">L'élégance absolue.</p>
           </div>
         </div>
       </div>

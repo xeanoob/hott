@@ -9,14 +9,14 @@ const products = [
 
 export function ProductGridSection() {
   return (
-    <section className="bg-black px-6 py-24 md:px-12 lg:py-32">
+    <section className="bg-white px-6 py-24 md:px-12 lg:py-32">
       <div className="mx-auto max-w-[1400px]">
-        <h2 className="mb-16 font-sans text-3xl font-semibold tracking-tight text-white md:text-5xl">
+        <h2 className="mb-16 font-sans text-3xl font-semibold tracking-tight text-black md:text-5xl">
           L'expérience HOTT.
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product, idx) => (
-            <div key={idx} className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-between overflow-hidden bg-white p-8 transition-transform duration-500 hover:scale-[1.02]">
+            <div key={idx} className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-between overflow-hidden border border-black/5 bg-[#fbfbf9] p-8 transition-transform duration-500 hover:scale-[1.02]">
               <div className="z-10">
                 <h3 className="font-sans text-xl font-bold tracking-tight text-black">{product.name}</h3>
                 <p className="mt-2 font-sans text-sm font-medium text-black/60">{product.desc}</p>
