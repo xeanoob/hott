@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Jost } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
+import { Providers } from './providers'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -69,9 +70,11 @@ export default function RootLayout({
       className={`${playfair.variable} ${jost.variable} bg-white`}
     >
       <body className="antialiased bg-white text-black font-sans">
-        {children}
-        <CookieConsent />
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <Providers>
+          {children}
+          <CookieConsent />
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </Providers>
       </body>
     </html>
   )

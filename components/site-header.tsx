@@ -4,9 +4,14 @@ import { User, ShoppingBag, Search, X, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { useSession, signIn } from "next-auth/react"
 
 export function SiteHeader() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  
   const [isVisible, setIsVisible] = useState(true)
   const [isAtTop, setIsAtTop] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -15,23 +20,88 @@ export function SiteHeader() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
+  // Auth taskpane states
   const [authStep, setAuthStep] = useState<"email" | "login" | "register">("email")
   const [emailValue, setEmailValue] = useState("")
+  const [nameValue, setNameValue] = useState("")
+  const [passwordValue, setPasswordValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleOAuthClick = (provider: string) => {
+    setError(`La connexion avec ${provider} est temporairement indisponible (clés d'API requises).`)
+  }
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!emailValue) return
     setIsLoading(true)
-    // Simulate database check
-    setTimeout(() => {
-      setIsLoading(false)
-      if (emailValue.toLowerCase() === "test@hott.com") {
+    setError("")
+    try {
+      const res = await fetch("/api/check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailValue }),
+      })
+      const data = await res.json()
+      if (data.exists) {
         setAuthStep("login")
       } else {
         setAuthStep("register")
       }
-    }, 600)
+    } catch (err) {
+      setError("Erreur lors de la vérification de l'email.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (authStep === "email") return handleEmailSubmit(e)
+    
+    setIsLoading(true)
+    setError("")
+
+    if (authStep === "login") {
+      const res = await signIn("credentials", {
+        email: emailValue,
+        password: passwordValue,
+        redirect: false,
+      })
+      if (res?.error) {
+        setError(res.error)
+        setIsLoading(false)
+      } else {
+        setIsAccountOpen(false)
+        router.push("/dashboard")
+      }
+    } else if (authStep === "register") {
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: nameValue, email: emailValue, password: passwordValue }),
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          setError(data.message || "Une erreur est survenue.")
+          setIsLoading(false)
+        } else {
+          // Auto login après inscription
+          await signIn("credentials", {
+            email: emailValue,
+            password: passwordValue,
+            redirect: false,
+          })
+          setIsAccountOpen(false)
+          router.push("/dashboard")
+        }
+      } catch (err) {
+        setError("Erreur de connexion.")
+        setIsLoading(false)
+      }
+    }
   }
 
   // Reset form when drawer closes
@@ -40,6 +110,9 @@ export function SiteHeader() {
       setTimeout(() => {
         setAuthStep("email")
         setEmailValue("")
+        setPasswordValue("")
+        setNameValue("")
+        setError("")
       }, 300)
     }
   }, [isAccountOpen])
@@ -47,29 +120,17 @@ export function SiteHeader() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
+      if (currentScrollY < 50) setIsAtTop(true)
+      else setIsAtTop(false)
 
-      // Check if we are at the top (over the video)
-      if (currentScrollY < 50) {
-        setIsAtTop(true)
-      } else {
-        setIsAtTop(false)
-      }
-
-      // Check scroll direction with delta threshold to avoid jitter
       const scrollDiff = Math.abs(currentScrollY - lastScrollY)
-      if (currentScrollY <= 80) {
-        setIsVisible(true)
-      } else if (scrollDiff > 5) {
-        if (currentScrollY > lastScrollY) {
-          setIsVisible(false)
-        } else {
-          setIsVisible(true)
-        }
+      if (currentScrollY <= 80) setIsVisible(true)
+      else if (scrollDiff > 5) {
+        if (currentScrollY > lastScrollY) setIsVisible(false)
+        else setIsVisible(true)
       }
-
       setLastScrollY(currentScrollY)
     }
-
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
@@ -77,10 +138,17 @@ export function SiteHeader() {
   const linkClass = `font-sans text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 ${
     isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
-
   const iconClass = `transition-colors duration-300 ${
     isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
+
+  const handleUserClick = () => {
+    if (status === "authenticated") {
+      router.push("/dashboard")
+    } else {
+      setIsAccountOpen(true)
+    }
+  }
 
   return (
     <>
@@ -92,9 +160,7 @@ export function SiteHeader() {
       }`}
     >
       <div className="mx-auto flex w-full items-center justify-between px-6 py-4 md:grid md:grid-cols-3 md:px-12 md:py-6">
-        {/* Left: Desktop Nav / Mobile Menu Button */}
         <div className="flex flex-1 items-center justify-start md:flex-none">
-          {/* Mobile Hamburger Menu Button */}
           <button
             type="button"
             aria-label="Menu"
@@ -104,27 +170,14 @@ export function SiteHeader() {
             <Menu size={20} strokeWidth={1} />
           </button>
           
-          {/* Desktop Nav */}
-          <nav
-            aria-label="Navigation gauche"
-            className="hidden items-center gap-8 md:flex"
-          >
-            <a href="#collections" className={linkClass}>
-              Nos Collections
-            </a>
-            <a href="#histoire" className={linkClass}>
-              Histoire
-            </a>
+          <nav aria-label="Navigation gauche" className="hidden items-center gap-8 md:flex">
+            <a href="#collections" className={linkClass}>Nos Collections</a>
+            <a href="#histoire" className={linkClass}>Histoire</a>
           </nav>
         </div>
 
-        {/* Center: Logo */}
         <div className="flex flex-1 justify-center md:flex-none">
-          <a
-            href="/"
-            aria-label="HOTT — Accueil"
-            className="flex items-center justify-center"
-          >
+          <a href="/" aria-label="HOTT — Accueil" className="flex items-center justify-center">
             <Image 
               src={isAtTop && !isSearchOpen ? "/7.svg" : "/7-black.svg"}
               alt="HOTT Logo" 
@@ -137,21 +190,12 @@ export function SiteHeader() {
           </a>
         </div>
 
-        {/* Right: Icons & Right Nav links */}
         <div className="flex flex-1 items-center justify-end gap-4 md:gap-8 md:flex-none">
-          <nav
-            aria-label="Navigation droite"
-            className="hidden items-center gap-8 md:flex"
-          >
-            <a href="#technologie" className={linkClass}>
-              Technologie
-            </a>
-            <a href="#boutique" className={linkClass}>
-              Boutique
-            </a>
+          <nav aria-label="Navigation droite" className="hidden items-center gap-8 md:flex">
+            <a href="#technologie" className={linkClass}>Technologie</a>
+            <a href="#boutique" className={linkClass}>Boutique</a>
           </nav>
           
-          {/* Action Icons */}
           <div className="flex items-center gap-4 md:gap-6">
             <button
               type="button"
@@ -159,17 +203,13 @@ export function SiteHeader() {
               className={iconClass}
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
-              {isSearchOpen ? (
-                <X size={18} strokeWidth={1} />
-              ) : (
-                <Search size={18} strokeWidth={1} />
-              )}
+              {isSearchOpen ? <X size={18} strokeWidth={1} /> : <Search size={18} strokeWidth={1} />}
             </button>
             <button
               type="button"
               aria-label="Compte utilisateur"
               className={iconClass}
-              onClick={() => setIsAccountOpen(true)}
+              onClick={handleUserClick}
             >
               <User size={18} strokeWidth={1} />
             </button>
@@ -184,7 +224,7 @@ export function SiteHeader() {
           </div>
         </div>
       </div>
-      {/* Slide-down organic search dropdown within the header element */}
+      
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
@@ -221,7 +261,6 @@ export function SiteHeader() {
       </AnimatePresence>
       </header>
 
-      {/* Search backdrop page overlay */}
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
@@ -268,11 +307,17 @@ export function SiteHeader() {
               ? "Veuillez saisir votre mot de passe pour vous connecter."
               : "Complétez vos informations pour créer votre espace privilégié."}
           </motion.p>
+
+          {error && (
+            <motion.div layout className="mt-6 rounded-md bg-red-50 p-3 text-center font-sans text-xs font-medium text-red-600">
+              {error}
+            </motion.div>
+          )}
           
           <motion.form 
             layout
-            onSubmit={authStep === "email" ? handleEmailSubmit : (e) => e.preventDefault()}
-            className="mt-12 flex flex-col gap-6"
+            onSubmit={handleAuthSubmit}
+            className="mt-8 flex flex-col gap-6"
           >
             <motion.div layout className="flex flex-col gap-2">
               <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
@@ -297,20 +342,18 @@ export function SiteHeader() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="grid grid-cols-2 gap-4"
+                  className="flex flex-col gap-2"
                 >
-                  <div className="flex flex-col gap-2">
-                    <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
-                      Prénom
-                    </label>
-                    <input type="text" required className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
-                      Nom
-                    </label>
-                    <input type="text" required className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black" />
-                  </div>
+                  <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
+                    Prénom et Nom
+                  </label>
+                  <input 
+                    type="text" 
+                    value={nameValue}
+                    onChange={(e) => setNameValue(e.target.value)}
+                    required 
+                    className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black" 
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -337,6 +380,8 @@ export function SiteHeader() {
                   </div>
                   <input 
                     type="password"
+                    value={passwordValue}
+                    onChange={(e) => setPasswordValue(e.target.value)}
                     required
                     className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black"
                     placeholder="••••••••"
@@ -370,31 +415,21 @@ export function SiteHeader() {
                 
                 <button
                   type="button"
+                  onClick={() => handleOAuthClick("Google")}
                   className="flex items-center justify-center gap-3 w-full border border-black/10 py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black transition-all hover:bg-black/5"
                 >
                   <svg className="h-4 w-4" viewBox="0 0 24 24">
-                    <path
-                      fill="#4285F4"
-                      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.5z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.11C3.18 21.88 7.31 24 12 24z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z"
-                    />
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.5z" />
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.11C3.18 21.88 7.31 24 12 24z" />
+                    <path fill="#FBBC05" d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z" />
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z" />
                   </svg>
                   Continuer avec Google
                 </button>
 
                 <button
                   type="button"
+                  onClick={() => handleOAuthClick("Apple")}
                   className="flex items-center justify-center gap-3 w-full border border-black bg-black py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-black/90"
                 >
                   <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24">
@@ -491,34 +526,10 @@ export function SiteHeader() {
         
         <div className="mt-20 flex h-full flex-col justify-between">
           <nav className="flex flex-col gap-6">
-            <a 
-              href="#collections" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
-            >
-              Nos Collections
-            </a>
-            <a 
-              href="#histoire" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
-            >
-              Histoire
-            </a>
-            <a 
-              href="#technologie" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
-            >
-              Technologie
-            </a>
-            <a 
-              href="#boutique" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black"
-            >
-              Boutique
-            </a>
+            <a href="#collections" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Nos Collections</a>
+            <a href="#histoire" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Histoire</a>
+            <a href="#technologie" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Technologie</a>
+            <a href="#boutique" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Boutique</a>
           </nav>
           
           <div className="border-t border-black/10 pt-6">
