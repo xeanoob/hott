@@ -17,12 +17,12 @@ const specifications = [
       "Résistance en fibre de carbone avec régulation thermique de 25°C à 35°C et sécurité anti-surchauffe intégrée.",
   },
   {
-    title: "Matériaux Résistants (IPX4)",
+    title: "Matériaux Résistants",
     description:
-      "Conception étanche à l'extérieur, et silicone alimentaire doux à l'intérieur pour préserver le mors.",
+      "Conception étanche IPX4 à l'extérieur, et silicone alimentaire doux à l'intérieur pour préserver le mors.",
   },
   {
-    title: "Fermeture & Contrôle",
+    title: "Contrôle Absolu",
     description:
       "Aimants néodyme haute résistance, poche pour batterie externe et bouton LED manipulable avec des gants.",
   },
@@ -31,75 +31,91 @@ const specifications = [
 export function MacroDetails() {
   return (
     <section id="technologie" className="relative w-full bg-white text-black">
-      <div className="flex flex-col md:flex-row">
+      {/* Full-width immersive image — Devialet-style */}
+      <div className="relative h-[60vh] w-full overflow-hidden md:h-[80vh]">
+        <Image
+          src="/hott-detail.png"
+          alt="Détail macro du WARMBIT"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
         
-        {/* Left Side: Sticky Image */}
-        <div className="relative h-[50vh] w-full md:sticky md:top-0 md:h-screen md:w-1/2">
-          <Image
-            src="/hott-detail.png"
-            alt="Détail macro du WARMBIT"
-            fill
-            className="object-cover"
-          />
-          {/* Subtle gradient to blend with the black background */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent md:bg-gradient-to-r" />
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute bottom-0 left-0 right-0 px-6 pb-12 md:px-20 md:pb-20"
+        >
+          <span className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-black/40">
+            Ingénierie
+          </span>
+          <h2 className="mt-3 font-sans text-4xl font-semibold tracking-tight text-black md:text-6xl lg:text-7xl">
+            Le détail fait<br className="hidden md:block" /> la différence.
+          </h2>
+        </motion.div>
+      </div>
 
-        {/* Right Side: Scrolling Specifications */}
-        <div className="flex w-full flex-col justify-center px-8 py-24 md:w-1/2 md:px-20 md:py-48">
-          <motion.span 
-            {...fadeUp}
-            className="mb-24 block text-xs uppercase font-semibold tracking-[0.3em] text-beige"
-          >
-            Le détail de l'ingénierie
-          </motion.span>
-          
-          <div className="flex flex-col gap-32">
-            {specifications.map((spec, index) => (
-              <motion.div 
-                key={spec.title} 
-                {...fadeUp}
-                className="group flex flex-col gap-6 border-b border-black/5 pb-12"
-              >
-                <div className="flex flex-col gap-2">
-                  <span className="font-sans text-2xl font-bold tracking-widest text-beige transition-colors">
-                    0{index + 1}
-                  </span>
-                  <h3 className="text-balance font-sans text-4xl font-semibold tracking-tighter md:text-5xl lg:text-6xl text-black">
-                    {spec.title}
-                  </h3>
-                </div>
-                <p className="max-w-md font-sans text-lg font-medium leading-relaxed text-black/60 md:text-xl">
+      {/* Specifications — clean vertical list, Devialet style */}
+      <div className="mx-auto max-w-5xl px-6 py-24 md:px-20 md:py-40">
+        <div className="flex flex-col">
+          {specifications.map((spec, index) => (
+            <motion.div 
+              key={spec.title} 
+              {...fadeUp}
+              className="group grid grid-cols-1 items-start gap-6 border-t border-black/10 py-16 md:grid-cols-12 md:gap-12 md:py-20"
+            >
+              <div className="md:col-span-1">
+                <span className="font-sans text-sm font-semibold tracking-widest text-[#c5a880]">
+                  0{index + 1}
+                </span>
+              </div>
+              <div className="md:col-span-4">
+                <h3 className="font-sans text-2xl font-semibold tracking-tight text-black md:text-3xl">
+                  {spec.title}
+                </h3>
+              </div>
+              <div className="md:col-span-7">
+                <p className="max-w-lg font-sans text-base font-normal leading-relaxed text-black/50 md:text-lg">
                   {spec.description}
                 </p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Contact Section at the end of the scroll */}
-          <motion.div 
-            {...fadeUp}
-            className="mt-24 flex flex-col gap-8 rounded-3xl border border-black/10 bg-beige/10 p-10 transition-colors hover:border-beige"
-          >
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-beige">Contact</span>
-              <p className="mt-4 font-sans text-2xl font-medium tracking-tight md:text-3xl text-black">
-                Un conseiller à votre écoute
-              </p>
-            </div>
-            <dl className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-black/40">Téléphone</dt>
-                <dd className="mt-1 font-sans text-sm font-medium tracking-wide text-black">+33 1 84 00 00 00</dd>
               </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-black/40">Email</dt>
-                <dd className="mt-1 font-sans text-sm font-medium tracking-wide text-black">conseil@hott.com</dd>
-              </div>
-            </dl>
-          </motion.div>
-          
+            </motion.div>
+          ))}
         </div>
+      </div>
+
+      {/* Contact CTA — minimal, elegant */}
+      <div className="border-t border-black/5">
+        <motion.div 
+          {...fadeUp}
+          className="mx-auto flex max-w-5xl flex-col items-center px-6 py-32 text-center md:px-20 md:py-40"
+        >
+          <span className="mb-6 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[#c5a880]">
+            Besoin de conseils ?
+          </span>
+          <h3 className="font-sans text-3xl font-semibold tracking-tight text-black md:text-5xl lg:text-6xl">
+            Un conseiller à votre écoute.
+          </h3>
+          <p className="mt-6 max-w-md font-sans text-base font-normal leading-relaxed text-black/50">
+            Notre équipe d'experts est disponible pour vous accompagner dans votre choix.
+          </p>
+          <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+            <a
+              href="tel:+33184000000"
+              className="inline-block border border-black bg-black px-10 py-4 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-transparent hover:text-black"
+            >
+              +33 1 84 00 00 00
+            </a>
+            <a
+              href="mailto:conseil@hott.com"
+              className="inline-block border border-black/20 bg-transparent px-10 py-4 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black/60 transition-all duration-300 hover:border-black hover:text-black"
+            >
+              conseil@hott.com
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

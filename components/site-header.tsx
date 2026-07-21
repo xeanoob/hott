@@ -4,13 +4,15 @@ import { User, ShoppingBag, Search, X, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { useSession, signIn } from "next-auth/react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
 export function SiteHeader() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
+  const isHomePage = pathname === "/"
   
   const [isVisible, setIsVisible] = useState(true)
   const [isAtTop, setIsAtTop] = useState(true)
@@ -135,19 +137,16 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
 
+  const useTransparentMode = isHomePage && isAtTop && !isSearchOpen
   const linkClass = `font-sans text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 ${
-    isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+    useTransparentMode ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
   const iconClass = `transition-colors duration-300 ${
-    isAtTop && !isSearchOpen ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+    useTransparentMode ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
   }`
 
   const handleUserClick = () => {
-    if (status === "authenticated") {
-      router.push("/dashboard")
-    } else {
-      setIsAccountOpen(true)
-    }
+    setIsAccountOpen(true)
   }
 
   return (
@@ -156,7 +155,7 @@ export function SiteHeader() {
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
-        isAtTop && !isSearchOpen ? "bg-transparent" : "bg-white/95 backdrop-blur-sm"
+        useTransparentMode ? "bg-transparent" : "bg-white/95 backdrop-blur-sm border-b border-black/5"
       }`}
     >
       <div className="mx-auto flex w-full items-center justify-between px-6 py-4 md:grid md:grid-cols-3 md:px-12 md:py-6">
@@ -179,7 +178,7 @@ export function SiteHeader() {
         <div className="flex flex-1 justify-center md:flex-none">
           <a href="/" aria-label="HOTT — Accueil" className="flex items-center justify-center">
             <Image 
-              src={isAtTop && !isSearchOpen ? "/7.svg" : "/7-black.svg"}
+              src={useTransparentMode ? "/7.svg" : "/7-black.svg"}
               alt="HOTT Logo" 
               width={586} 
               height={185} 
@@ -297,168 +296,245 @@ export function SiteHeader() {
         </button>
         
         <div className="mt-20 flex h-full flex-col">
-          <motion.h2 layout className="font-sans text-3xl font-semibold tracking-tight text-black">
-            {authStep === "email" ? "Connexion" : authStep === "login" ? "Bon retour" : "Créer un compte"}
-          </motion.h2>
-          <motion.p layout className="mt-2 font-sans text-sm text-black/60">
-            {authStep === "email" 
-              ? "Saisissez votre e-mail pour continuer." 
-              : authStep === "login"
-              ? "Veuillez saisir votre mot de passe pour vous connecter."
-              : "Complétez vos informations pour créer votre espace privilégié."}
-          </motion.p>
 
-          {error && (
-            <motion.div layout className="mt-6 rounded-md bg-red-50 p-3 text-center font-sans text-xs font-medium text-red-600">
-              {error}
-            </motion.div>
-          )}
-          
-          <motion.form 
-            layout
-            onSubmit={handleAuthSubmit}
-            className="mt-8 flex flex-col gap-6"
-          >
-            <motion.div layout className="flex flex-col gap-2">
-              <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
-                Adresse e-mail
-              </label>
-              <input 
-                type="email" 
-                value={emailValue}
-                onChange={(e) => setEmailValue(e.target.value)}
-                disabled={authStep !== "email" || isLoading}
-                required
-                className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black disabled:opacity-50"
-                placeholder="nom@exemple.com"
-              />
-            </motion.div>
-            
-            <AnimatePresence mode="popLayout">
-              {authStep === "register" && (
-                <motion.div 
-                  layout
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-2"
+          {/* ─── AUTHENTICATED: Account nav ─── */}
+          {status === "authenticated" ? (
+            <>
+              <h2 className="font-sans text-3xl font-semibold tracking-tight text-black">
+                Mon Compte
+              </h2>
+              <p className="mt-2 font-sans text-sm text-black/50">
+                Bonjour, {session?.user?.name || "Cher(e) Client(e)"}
+              </p>
+
+              <nav className="mt-10 flex flex-col">
+                {[
+                  { label: "Tableau de bord", tab: "dashboard", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                  )},
+                  { label: "Vos commandes", tab: "commandes", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                  )},
+                  { label: "Vos produits", tab: "produits", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
+                    </svg>
+                  )},
+                  { label: "Carnet d'adresses", tab: "adresses", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+                    </svg>
+                  )},
+                  { label: "Vos informations", tab: "informations", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
+                    </svg>
+                  )},
+                  { label: "Centre d'aide", tab: "aide", icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  )},
+                ].map((item) => (
+                  <Link
+                    key={item.tab}
+                    href={`/dashboard?tab=${item.tab}`}
+                    onClick={() => setIsAccountOpen(false)}
+                    className="flex items-center gap-4 px-2 py-3.5 font-sans text-sm font-normal text-black/70 transition-all duration-200 hover:bg-black/[0.03] hover:text-black"
+                  >
+                    <span className="text-black/35">{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Déconnexion */}
+              <div className="mt-auto pb-8">
+                <button
+                  onClick={() => {
+                    setIsAccountOpen(false)
+                    signOut({ callbackUrl: "/" })
+                  }}
+                  className="flex w-full items-center gap-4 px-2 py-3.5 font-sans text-sm font-normal text-red-500 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
                 >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Déconnexion
+                </button>
+              </div>
+            </>
+          ) : (
+            /* ─── NOT AUTHENTICATED: Auth form ─── */
+            <>
+              <motion.h2 layout className="font-sans text-3xl font-semibold tracking-tight text-black">
+                {authStep === "email" ? "Connexion" : authStep === "login" ? "Bon retour" : "Créer un compte"}
+              </motion.h2>
+              <motion.p layout className="mt-2 font-sans text-sm text-black/60">
+                {authStep === "email" 
+                  ? "Saisissez votre e-mail pour continuer." 
+                  : authStep === "login"
+                  ? "Veuillez saisir votre mot de passe pour vous connecter."
+                  : "Complétez vos informations pour créer votre espace privilégié."}
+              </motion.p>
+
+              {error && (
+                <motion.div layout className="mt-6 rounded-md bg-red-50 p-3 text-center font-sans text-xs font-medium text-red-600">
+                  {error}
+                </motion.div>
+              )}
+              
+              <motion.form 
+                layout
+                onSubmit={handleAuthSubmit}
+                className="mt-8 flex flex-col gap-6"
+              >
+                <motion.div layout className="flex flex-col gap-2">
                   <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
-                    Prénom et Nom
+                    Adresse e-mail
                   </label>
                   <input 
-                    type="text" 
-                    value={nameValue}
-                    onChange={(e) => setNameValue(e.target.value)}
-                    required 
-                    className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black" 
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence mode="popLayout">
-              {authStep !== "email" && (
-                <motion.div 
-                  layout
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="flex justify-between">
-                    <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
-                      Mot de passe
-                    </label>
-                    {authStep === "login" && (
-                      <a href="#" className="font-sans text-[0.65rem] font-medium tracking-wide text-black underline-offset-4 hover:underline">
-                        Oublié ?
-                      </a>
-                    )}
-                  </div>
-                  <input 
-                    type="password"
-                    value={passwordValue}
-                    onChange={(e) => setPasswordValue(e.target.value)}
+                    type="email" 
+                    value={emailValue}
+                    onChange={(e) => setEmailValue(e.target.value)}
+                    disabled={authStep !== "email" || isLoading}
                     required
-                    className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black"
-                    placeholder="••••••••"
+                    className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black disabled:opacity-50"
+                    placeholder="nom@exemple.com"
                   />
                 </motion.div>
-              )}
-            </AnimatePresence>
-
-            <motion.button
-              layout
-              type="submit"
-              disabled={isLoading}
-              className="mt-6 w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black disabled:opacity-70"
-            >
-              {isLoading 
-                ? "Chargement..." 
-                : authStep === "email" 
-                ? "Continuer" 
-                : authStep === "login" 
-                ? "Se connecter" 
-                : "Créer mon compte"}
-            </motion.button>
-
-            {authStep === "email" && (
-              <motion.div layout className="flex flex-col gap-4 mt-2">
-                <div className="flex items-center gap-4 my-2">
-                  <div className="h-[1px] bg-black/10 flex-1" />
-                  <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">ou</span>
-                  <div className="h-[1px] bg-black/10 flex-1" />
-                </div>
                 
-                <button
-                  type="button"
-                  onClick={() => handleOAuthClick("Google")}
-                  className="flex items-center justify-center gap-3 w-full border border-black/10 py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black transition-all hover:bg-black/5"
-                >
-                  <svg className="h-4 w-4" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.5z" />
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.11C3.18 21.88 7.31 24 12 24z" />
-                    <path fill="#FBBC05" d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z" />
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z" />
-                  </svg>
-                  Continuer avec Google
-                </button>
+                <AnimatePresence mode="popLayout">
+                  {authStep === "register" && (
+                    <motion.div 
+                      layout
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col gap-2"
+                    >
+                      <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
+                        Prénom et Nom
+                      </label>
+                      <input 
+                        type="text" 
+                        value={nameValue}
+                        onChange={(e) => setNameValue(e.target.value)}
+                        required 
+                        className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black" 
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                <button
-                  type="button"
-                  onClick={() => handleOAuthClick("Apple")}
-                  className="flex items-center justify-center gap-3 w-full border border-black bg-black py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-black/90"
+                <AnimatePresence mode="popLayout">
+                  {authStep !== "email" && (
+                    <motion.div 
+                      layout
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col gap-2"
+                    >
+                      <div className="flex justify-between">
+                        <label className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">
+                          Mot de passe
+                        </label>
+                        {authStep === "login" && (
+                          <a href="#" className="font-sans text-[0.65rem] font-medium tracking-wide text-black underline-offset-4 hover:underline">
+                            Oublié ?
+                          </a>
+                        )}
+                      </div>
+                      <input 
+                        type="password"
+                        value={passwordValue}
+                        onChange={(e) => setPasswordValue(e.target.value)}
+                        required
+                        className="border-b border-black/20 bg-transparent py-3 font-sans text-sm text-black outline-none transition-colors focus:border-black"
+                        placeholder="••••••••"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <motion.button
+                  layout
+                  type="submit"
+                  disabled={isLoading}
+                  className="mt-6 w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black disabled:opacity-70"
                 >
-                  <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45" />
-                  </svg>
-                  Continuer avec Apple
-                </button>
-              </motion.div>
-            )}
-          </motion.form>
-          
-          <AnimatePresence>
-            {authStep !== "email" && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="mt-8 text-center"
-              >
-                <button 
-                  type="button"
-                  onClick={() => setAuthStep("email")}
-                  className="font-sans text-xs font-medium text-black/60 underline-offset-4 transition-colors hover:text-black hover:underline"
-                >
-                  Utiliser une autre adresse e-mail
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  {isLoading 
+                    ? "Chargement..." 
+                    : authStep === "email" 
+                    ? "Continuer" 
+                    : authStep === "login" 
+                    ? "Se connecter" 
+                    : "Créer mon compte"}
+                </motion.button>
+
+                {authStep === "email" && (
+                  <motion.div layout className="flex flex-col gap-4 mt-2">
+                    <div className="flex items-center gap-4 my-2">
+                      <div className="h-[1px] bg-black/10 flex-1" />
+                      <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-black/40">ou</span>
+                      <div className="h-[1px] bg-black/10 flex-1" />
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => handleOAuthClick("Google")}
+                      className="flex items-center justify-center gap-3 w-full border border-black/10 py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black transition-all hover:bg-black/5"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 2.77-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.5z" />
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.11C3.18 21.88 7.31 24 12 24z" />
+                        <path fill="#FBBC05" d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z" />
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z" />
+                      </svg>
+                      Continuer avec Google
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleOAuthClick("Apple")}
+                      className="flex items-center justify-center gap-3 w-full border border-black bg-black py-3.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-black/90"
+                    >
+                      <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.84-.98 2.94.1.08.2.12.3.12.87 0 1.95-.57 2.51-1.45" />
+                      </svg>
+                      Continuer avec Apple
+                    </button>
+                  </motion.div>
+                )}
+              </motion.form>
+              
+              <AnimatePresence>
+                {authStep !== "email" && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="mt-8 text-center"
+                  >
+                    <button 
+                      type="button"
+                      onClick={() => setAuthStep("email")}
+                      className="font-sans text-xs font-medium text-black/60 underline-offset-4 transition-colors hover:text-black hover:underline"
+                    >
+                      Utiliser une autre adresse e-mail
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </div>
       </div>
 
