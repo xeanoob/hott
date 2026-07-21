@@ -40,7 +40,7 @@ export function MacroDetails() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-        
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -61,8 +61,8 @@ export function MacroDetails() {
       <div className="mx-auto max-w-5xl px-6 py-24 md:px-20 md:py-40">
         <div className="flex flex-col">
           {specifications.map((spec, index) => (
-            <motion.div 
-              key={spec.title} 
+            <motion.div
+              key={spec.title}
               {...fadeUp}
               className="group grid grid-cols-1 items-start gap-6 border-t border-black/10 py-16 md:grid-cols-12 md:gap-12 md:py-20"
             >
@@ -88,7 +88,7 @@ export function MacroDetails() {
 
       {/* Contact CTA — minimal, elegant */}
       <div className="border-t border-black/5">
-        <motion.div 
+        <motion.div
           {...fadeUp}
           className="mx-auto flex max-w-5xl flex-col items-center px-6 py-32 text-center md:px-20 md:py-40"
         >

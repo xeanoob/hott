@@ -7,7 +7,7 @@ export function MissionSection() {
     <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black px-6 py-32 md:px-20">
       {/* Subtle radial glow in the background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(197,168,128,0.06)_0%,_transparent_70%)]" />
-      
+
       <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center text-center">
         <motion.span
           initial={{ opacity: 0, y: 20 }}
@@ -18,7 +18,7 @@ export function MissionSection() {
         >
           Notre Philosophie
         </motion.span>
-        
+
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

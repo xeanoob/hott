@@ -5,35 +5,35 @@ export function SiteFooter() {
   return (
     <footer className="w-full bg-white text-black border-t border-black/5">
       <div className="mx-auto max-w-[1400px] px-6 py-20 md:px-12 md:py-32">
-        
+
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
-          
+
           {/* Brand & Intro (Spans 5 cols) */}
           <div className="md:col-span-5 flex flex-col justify-between">
             <div>
-              <Image 
-                src="/7-black.svg" 
-                alt="HOTT Logo" 
-                width={586} 
-                height={185} 
+              <Image
+                src="/7-black.svg"
+                alt="HOTT Logo"
+                width={586}
+                height={185}
                 unoptimized={true}
-                className="h-10 w-auto self-start object-left mb-8" 
+                className="h-10 w-auto self-start object-left mb-8"
               />
               <p className="max-w-sm font-sans text-sm leading-relaxed text-black/40">
                 L'élégance absolue, fondée sur le bien-être animal. HOTT redéfinit les standards de l'équipement équestre haut de gamme.
               </p>
             </div>
-            
+
             {/* Newsletter */}
             <div className="mt-16">
               <h4 className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.35em] text-black/25 mb-4">
                 Restez informé
               </h4>
               <form className="relative flex items-center border-b border-black/15 pb-2 max-w-sm transition-colors focus-within:border-black">
-                <input 
-                  type="email" 
-                  placeholder="Votre adresse email" 
+                <input
+                  type="email"
+                  placeholder="Votre adresse email"
                   className="w-full bg-transparent font-sans text-sm text-black outline-none placeholder:text-black/25"
                 />
                 <button type="submit" className="text-black/30 hover:text-black transition-colors ml-4">
@@ -58,7 +58,7 @@ export function SiteFooter() {
               <Link href="#philosophie" className="font-sans text-sm text-black/40 transition-all hover:text-black hover:translate-x-1">Philosophie</Link>
               <Link href="#boutique" className="font-sans text-sm text-black/40 transition-all hover:text-black hover:translate-x-1">La Boutique</Link>
             </div>
-            
+
             {/* Col 2 */}
             <div className="flex flex-col gap-5">
               <h4 className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.35em] text-[#c5a880] mb-2">Assistance</h4>
@@ -66,7 +66,7 @@ export function SiteFooter() {
               <Link href="#" className="font-sans text-sm text-black/40 transition-all hover:text-black hover:translate-x-1">Livraison</Link>
               <Link href="#" className="font-sans text-sm text-black/40 transition-all hover:text-black hover:translate-x-1">Retours</Link>
             </div>
-            
+
             {/* Col 3 */}
             <div className="flex flex-col gap-5">
               <h4 className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.35em] text-[#c5a880] mb-2">Légal</h4>
@@ -88,7 +88,7 @@ export function SiteFooter() {
             <a href="#" className="font-sans text-[0.6rem] font-semibold uppercase tracking-widest text-black/40 transition-colors hover:text-black">LinkedIn</a>
           </div>
         </div>
-        
+
       </div>
     </footer>
   )

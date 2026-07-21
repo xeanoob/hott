@@ -4,17 +4,17 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 
 const products = [
-  { 
-    name: "WARMBIT", 
+  {
+    name: "WARMBIT",
     subtitle: "Original",
-    desc: "La révolution thermique pour le bien-être de votre cheval.", 
+    desc: "La révolution thermique pour le bien-être de votre cheval.",
     image: "/hott-detail.png",
     price: "À partir de 189€"
   },
-  { 
-    name: "WARMBIT", 
+  {
+    name: "WARMBIT",
     subtitle: "Pro",
-    desc: "Pour les cavaliers exigeants. Performance sans compromis.", 
+    desc: "Pour les cavaliers exigeants. Performance sans compromis.",
     image: "/hott-detail.png",
     price: "À partir de 249€"
   },
@@ -33,13 +33,13 @@ export function ProductGridSection() {
       <div className="mx-auto max-w-[1400px]">
 
         {/* Section label */}
-        <motion.span 
+        <motion.span
           {...fadeUp}
           className="mb-6 block font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-black/30"
         >
           La Collection
         </motion.span>
-        <motion.h2 
+        <motion.h2
           {...fadeUp}
           className="max-w-2xl font-sans text-4xl font-semibold tracking-tight text-black md:text-6xl"
         >
@@ -48,7 +48,7 @@ export function ProductGridSection() {
 
         {/* Asymmetric product rectangles */}
         <div className="mt-24 flex flex-col gap-20 md:gap-32">
-          
+
           {/* Product 1 — large, offset left */}
           <motion.div {...fadeUp} className="flex justify-start">
             <div className="group relative w-full cursor-pointer overflow-hidden bg-[#f5f3ef] md:w-[75%]">

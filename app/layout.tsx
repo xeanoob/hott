@@ -1,17 +1,18 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Jost } from 'next/font/google'
+import { Cormorant_Garamond, Montserrat } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
 import { Providers } from './providers'
 import './globals.css'
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
+  weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
 })
 
-const jost = Jost({
+const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
@@ -55,8 +56,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#ffffff',
+  colorScheme: 'dark',
+  themeColor: '#000000',
 }
 
 export default function RootLayout({
@@ -67,9 +68,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${playfair.variable} ${jost.variable} bg-white`}
+      className={`${cormorant.variable} ${montserrat.variable} bg-black`}
     >
-      <body className="antialiased bg-white text-black font-sans">
+      <body className="antialiased bg-black text-white font-sans">
         <Providers>
           {children}
           <CookieConsent />

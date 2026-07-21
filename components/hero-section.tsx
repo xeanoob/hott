@@ -13,8 +13,9 @@ export function HeroSection() {
         playsInline
         className="absolute inset-0 h-full w-full object-cover"
       />
-      {/* Dark gradient at the bottom so the white text pops perfectly */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      {/* Dark gradient to fade seamlessly into the next section */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
 
       {/* Main content — bottom left */}
       <motion.div

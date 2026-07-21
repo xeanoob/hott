@@ -19,22 +19,22 @@ export function AmbassadorSection() {
         <div className="flex flex-col gap-16 md:flex-row md:items-start md:gap-12">
 
           {/* Image block — offset left, taller */}
-          <motion.div 
+          <motion.div
             {...fadeUp}
             className="relative w-full overflow-hidden md:w-[55%]"
           >
             <div className="relative aspect-[3/4] w-full overflow-hidden">
-              <Image 
-                src="/hott-hero.png" 
-                alt="Cavalier HOTT" 
-                fill 
-                className="object-cover" 
+              <Image
+                src="/hott-hero.png"
+                alt="Cavalier HOTT"
+                fill
+                className="object-cover"
               />
             </div>
           </motion.div>
 
           {/* Text block — offset right, pushed down */}
-          <motion.div 
+          <motion.div
             {...fadeUp}
             className="flex w-full flex-col justify-center md:w-[40%] md:pt-32"
           >
