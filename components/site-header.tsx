@@ -177,13 +177,9 @@ export function SiteHeader() {
 
         <div className="flex flex-1 justify-center md:flex-none">
           <a href="/" aria-label="HOTT — Accueil" className="flex items-center justify-center">
-            <Image 
+            <img 
               src={useTransparentMode ? "/7.svg" : "/7-black.svg"}
               alt="HOTT Logo" 
-              width={586} 
-              height={185} 
-              unoptimized={true}
-              priority={true}
               className="h-9 md:h-14 w-auto" 
             />
           </a>
