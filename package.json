@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint ."
   },
@@ -36,10 +36,8 @@
     "tailwindcss": "^4.3.3",
     "typescript": "5.7.3"
   },
-  "pnpm": {
-    "overrides": {
-      "hono": "4.12.25"
-    }
+  "overrides": {
+    "hono": "4.12.25"
   },
   "allowScripts": {
     "@prisma/engines@7.9.0": true,
