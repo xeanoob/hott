@@ -23,7 +23,12 @@ export function SplashScreen() {
 
   // Calculs précis pour faire atterrir le logo EXACTEMENT à sa place dans le header
   const centerOffset = isMobile ? 34 : 52
-  const initialScale = isMobile ? 1.8 : 2.5
+  const targetHeight = isMobile ? 36 : 56
+  const initialScaleMultiplier = isMobile ? 1.8 : 2.5
+  
+  // Rendre le SVG en grand nativement pour éviter le flou de rasterisation CSS
+  const renderHeight = targetHeight * initialScaleMultiplier
+  const finalScale = targetHeight / renderHeight
 
   // On calcule la valeur de translation Y en PIXELS purs uniquement si on est monté
   const finalY = mounted ? -(windowHeight / 2) + centerOffset : 0
@@ -40,11 +45,12 @@ export function SplashScreen() {
         >
           {mounted && (
             <motion.div
-              className="relative"
-              initial={{ y: 0, scale: initialScale }}
+              className="relative flex items-center justify-center"
+              style={{ height: renderHeight }}
+              initial={{ y: 0, scale: 1 }}
               animate={{ 
                 y: [0, 0, finalY], 
-                scale: [initialScale, initialScale, 1], 
+                scale: [1, 1, finalScale], 
               }}
               transition={{ 
                 duration: 2.4, 
@@ -56,14 +62,14 @@ export function SplashScreen() {
               <img
                 src="/7.svg"
                 alt="HOTT Logo Faint"
-                className="h-9 md:h-14 w-auto object-contain opacity-20"
+                className="h-full w-auto object-contain opacity-20"
               />
               
               {/* Reveal logo */}
               <motion.img
                 src="/7.svg"
                 alt="HOTT Logo"
-                className="absolute inset-0 h-9 md:h-14 w-auto object-contain"
+                className="absolute inset-0 h-full w-auto object-contain"
                 initial={{ clipPath: "inset(0 100% 0 0)" }}
                 animate={{ clipPath: "inset(0 0% 0 0)" }}
                 transition={{ 
