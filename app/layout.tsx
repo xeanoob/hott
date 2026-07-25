@@ -2,7 +2,6 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Montserrat } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
-import { CustomCursor } from '../components/custom-cursor'
 import { Providers } from './providers'
 import './globals.css'
 
@@ -71,9 +70,8 @@ export default function RootLayout({
       lang="fr"
       className={`${cormorant.variable} ${montserrat.variable} bg-black`}
     >
-      <body className="antialiased bg-black text-white font-sans cursor-default sm:cursor-none">
+      <body className="antialiased bg-black text-white font-sans">
         <Providers>
-          <CustomCursor />
           {children}
           <CookieConsent />
           {process.env.NODE_ENV === 'production' && <Analytics />}
