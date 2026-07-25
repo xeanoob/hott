@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Montserrat } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
+import { SmoothScroll } from '../components/smooth-scroll'
 import { Providers } from './providers'
 import './globals.css'
 
@@ -71,11 +72,13 @@ export default function RootLayout({
       className={`${cormorant.variable} ${montserrat.variable} bg-black`}
     >
       <body className="antialiased bg-black text-white font-sans">
-        <Providers>
-          {children}
-          <CookieConsent />
-          {process.env.NODE_ENV === 'production' && <Analytics />}
-        </Providers>
+        <SmoothScroll>
+          <Providers>
+            {children}
+            <CookieConsent />
+            {process.env.NODE_ENV === 'production' && <Analytics />}
+          </Providers>
+        </SmoothScroll>
       </body>
     </html>
   )

@@ -3,6 +3,8 @@
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { TextReveal } from "./text-reveal"
+import { MagneticButton } from "./magnetic-button"
+import { useCartStore } from "../lib/store/useCartStore"
 
 const products = [
   {
@@ -31,6 +33,18 @@ const fadeUp = {
 } as const
 
 export function ProductGridSection() {
+  const addItem = useCartStore((state) => state.addItem)
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addItem({
+      id: product.name + product.subtitle,
+      name: `${product.name} ${product.subtitle}`,
+      price: parseInt(product.price.replace(/\D/g, "")),
+      image: product.image,
+      quantity: 1,
+    })
+  }
+
   return (
     <section id="experience" className="w-full bg-white px-6 py-32 md:px-12 lg:py-48">
       <div className="mx-auto max-w-[1400px]">
@@ -78,12 +92,13 @@ export function ProductGridSection() {
                 <p className="mt-4 max-w-md font-sans text-sm font-normal leading-relaxed text-black/50">
                   {products[0].desc}
                 </p>
-                <a
-                  href="#"
-                  className="mt-8 inline-block border border-black bg-black px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-transparent hover:text-black"
-                >
-                  Découvrir
-                </a>
+                <div className="mt-8">
+                  <MagneticButton onClick={() => handleAddToCart(products[0])}>
+                    <div className="inline-block border border-black bg-black px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-transparent hover:text-black">
+                      Ajouter au panier
+                    </div>
+                  </MagneticButton>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -115,12 +130,13 @@ export function ProductGridSection() {
                 <p className="mt-4 max-w-md font-sans text-sm font-normal leading-relaxed text-black/50">
                   {products[1].desc}
                 </p>
-                <a
-                  href="#"
-                  className="mt-8 inline-block border border-black/20 bg-transparent px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black/60 transition-all duration-300 hover:border-black hover:text-black"
-                >
-                  Découvrir
-                </a>
+                <div className="mt-8">
+                  <MagneticButton onClick={() => handleAddToCart(products[1])}>
+                    <div className="inline-block border border-black/20 bg-transparent px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black/60 transition-all duration-300 hover:border-black hover:text-black">
+                      Ajouter au panier
+                    </div>
+                  </MagneticButton>
+                </div>
               </div>
             </div>
           </motion.div>

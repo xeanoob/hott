@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useCartStore } from "../lib/store/useCartStore"
 
 export function SiteHeader() {
   const { data: session, status } = useSession()
@@ -19,8 +20,13 @@ export function SiteHeader() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [isAccountOpen, setIsAccountOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  
+  const isCartOpen = useCartStore((state) => state.isOpen)
+  const setIsCartOpen = useCartStore((state) => state.setIsOpen)
+  const cartItems = useCartStore((state) => state.items)
+  const removeCartItem = useCartStore((state) => state.removeItem)
+  const cartTotal = useCartStore((state) => state.getCartTotal())
 
   // Auth taskpane states
   const [authStep, setAuthStep] = useState<"email" | "login" | "register">("email")
@@ -555,18 +561,56 @@ export function SiteHeader() {
         <div className="mt-20 flex h-full flex-col">
           <h2 className="font-sans text-3xl font-semibold tracking-tight text-black">Votre Panier</h2>
 
-          <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <ShoppingBag size={48} strokeWidth={1} className="mb-6 text-black/20" />
-            <p className="font-sans text-lg font-medium text-black/60">Votre panier est vide.</p>
-            <p className="mt-2 font-sans text-sm text-black/40">Découvrez nos collections pour commencer vos achats.</p>
+          {cartItems.length === 0 ? (
+            <div className="flex flex-1 flex-col items-center justify-center text-center">
+              <ShoppingBag size={48} strokeWidth={1} className="mb-6 text-black/20" />
+              <p className="font-sans text-lg font-medium text-black/60">Votre panier est vide.</p>
+              <p className="mt-2 font-sans text-sm text-black/40">Découvrez nos collections pour commencer vos achats.</p>
 
-            <button
-              onClick={() => setIsCartOpen(false)}
-              className="mt-8 border border-black px-8 py-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-black hover:text-white"
-            >
-              Continuer mes achats
-            </button>
-          </div>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="mt-8 border border-black px-8 py-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-black hover:text-white"
+              >
+                Continuer mes achats
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-1 flex-col mt-8">
+              <div className="flex-1 overflow-y-auto pr-4">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex gap-4 border-b border-black/10 py-6">
+                    <div className="relative h-24 w-20 overflow-hidden bg-[#f5f3ef]">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    </div>
+                    <div className="flex flex-1 flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between">
+                          <h3 className="font-sans text-lg font-medium text-black">{item.name}</h3>
+                          <button onClick={() => removeCartItem(item.id)} className="text-black/40 hover:text-black">
+                            <X size={16} />
+                          </button>
+                        </div>
+                        <p className="font-sans text-sm text-black/50">Qté: {item.quantity}</p>
+                      </div>
+                      <p className="font-sans text-sm font-semibold tracking-widest text-[#c5a880]">{item.price}€</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="border-t border-black/10 pt-6 mt-6 pb-8">
+                <div className="flex justify-between font-sans text-lg font-semibold text-black mb-6">
+                  <span>Total</span>
+                  <span>{cartTotal}€</span>
+                </div>
+                <button
+                  className="w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black"
+                >
+                  Commander
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
