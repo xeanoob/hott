@@ -10,7 +10,7 @@ const products = [
     subtitle: "Original",
     desc: "La révolution thermique pour le bien-être de votre cheval.",
     image: "/hott-detail.png",
-    macroImage: "/hott-macro1.png",
+    macroImage: "/hott-hero.png",
     price: "À partir de 189€"
   },
   {
@@ -18,7 +18,7 @@ const products = [
     subtitle: "Pro",
     desc: "Pour les cavaliers exigeants. Performance sans compromis.",
     image: "/hott-detail.png",
-    macroImage: "/hott-macro2.png",
+    macroImage: "/hott-hero.png",
     price: "À partir de 249€"
   },
 ]
