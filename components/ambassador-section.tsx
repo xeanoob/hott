@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { ParallaxImage } from "./parallax-image"
 
 const fadeUp = {
   initial: { opacity: 0, y: 40 },
@@ -24,10 +25,10 @@ export function AmbassadorSection() {
             className="relative w-full overflow-hidden md:w-[55%]"
           >
             <div className="relative aspect-[3/4] w-full overflow-hidden">
-              <Image
+              <ParallaxImage
                 src="/hott-hero.png"
                 alt="Cavalier HOTT"
-                fill
+                offset={40}
                 className="object-cover"
               />
             </div>

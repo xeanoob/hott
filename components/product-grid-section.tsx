@@ -4,6 +4,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { TextReveal } from "./text-reveal"
 import { MagneticButton } from "./magnetic-button"
+import { ParallaxImage } from "./parallax-image"
 import { useCartStore } from "../lib/store/useCartStore"
 
 const products = [
@@ -69,16 +70,16 @@ export function ProductGridSection() {
           <motion.div {...fadeUp} className="flex justify-start">
             <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[75%]">
               <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <Image
+                <ParallaxImage
                   src={products[0].image}
                   alt={products[0].name}
-                  fill
+                  offset={40}
                   className="object-cover transition-all duration-[1.2s] ease-[0.22,1,0.36,1] group-hover:scale-105"
                 />
-                <Image
+                <ParallaxImage
                   src={products[0].macroImage}
                   alt={products[0].name + " Macro"}
-                  fill
+                  offset={40}
                   className="object-cover opacity-0 transition-all duration-[0.8s] ease-[0.22,1,0.36,1] group-hover:opacity-100 group-hover:scale-110"
                 />
               </div>
@@ -107,16 +108,16 @@ export function ProductGridSection() {
           <motion.div {...fadeUp} className="flex justify-end">
             <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[60%]">
               <div className="relative aspect-[4/3] w-full overflow-hidden">
-                <Image
+                <ParallaxImage
                   src={products[1].image}
                   alt={products[1].name}
-                  fill
+                  offset={40}
                   className="object-cover transition-all duration-[1.2s] ease-[0.22,1,0.36,1] group-hover:scale-105"
                 />
-                <Image
+                <ParallaxImage
                   src={products[1].macroImage}
                   alt={products[1].name + " Macro"}
-                  fill
+                  offset={40}
                   className="object-cover opacity-0 transition-all duration-[0.8s] ease-[0.22,1,0.36,1] group-hover:opacity-100 group-hover:scale-110"
                 />
               </div>

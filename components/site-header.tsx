@@ -144,7 +144,9 @@ export function SiteHeader() {
   }, [lastScrollY])
 
   const useTransparentMode = isHomePage && isAtTop && !isSearchOpen
-  const linkClass = `font-sans text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 ${useTransparentMode ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+  const linkClass = `group relative font-sans text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 ${useTransparentMode ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
+    }`
+  const underlineClass = `absolute -bottom-1 left-0 h-[1px] w-0 transition-all duration-500 ease-out group-hover:w-full ${useTransparentMode ? "bg-white" : "bg-black"
     }`
   const iconClass = `transition-colors duration-300 ${useTransparentMode ? "text-white/80 hover:text-white" : "text-black/60 hover:text-black"
     }`
@@ -172,8 +174,14 @@ export function SiteHeader() {
             </button>
 
             <nav aria-label="Navigation gauche" className="hidden items-center gap-8 md:flex">
-              <a href="#collections" className={linkClass}>Nos Collections</a>
-              <a href="#histoire" className={linkClass}>Histoire</a>
+              <a href="#collections" className={linkClass}>
+                Nos Collections
+                <span className={underlineClass}></span>
+              </a>
+              <a href="#histoire" className={linkClass}>
+                Histoire
+                <span className={underlineClass}></span>
+              </a>
             </nav>
           </div>
 
@@ -190,8 +198,14 @@ export function SiteHeader() {
 
           <div className="flex flex-1 items-center justify-end gap-4 md:gap-8 md:flex-none">
             <nav aria-label="Navigation droite" className="hidden items-center gap-8 md:flex">
-              <a href="#technologie" className={linkClass}>Technologie</a>
-              <a href="#boutique" className={linkClass}>Boutique</a>
+              <a href="#technologie" className={linkClass}>
+                Technologie
+                <span className={underlineClass}></span>
+              </a>
+              <a href="#boutique" className={linkClass}>
+                Boutique
+                <span className={underlineClass}></span>
+              </a>
             </nav>
 
             <div className="flex items-center gap-4 md:gap-6">

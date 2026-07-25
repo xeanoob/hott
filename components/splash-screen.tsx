@@ -39,22 +39,40 @@ export function SplashScreen() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black pointer-events-none"
         >
           {mounted && (
-            <motion.img
-              src="/7.svg"
-              alt="HOTT Logo"
-              className="h-9 md:h-14 w-auto object-contain"
-              initial={{ y: 0, scale: initialScale, opacity: 0 }}
+            <motion.div
+              className="relative"
+              initial={{ y: 0, scale: initialScale }}
               animate={{ 
                 y: [0, 0, finalY], 
                 scale: [initialScale, initialScale, 1], 
-                opacity: [0, 1, 1]
               }}
               transition={{ 
-                duration: 2.2, 
-                times: [0, 0.4, 1],
-                ease: [0.76, 0, 0.24, 1] // Courbe d'accélération luxueuse (très fluide)
+                duration: 2.4, 
+                times: [0, 0.6, 1],
+                ease: [0.76, 0, 0.24, 1] 
               }}
-            />
+            >
+              {/* Base logo very faint */}
+              <img
+                src="/7.svg"
+                alt="HOTT Logo Faint"
+                className="h-9 md:h-14 w-auto object-contain opacity-20"
+              />
+              
+              {/* Reveal logo */}
+              <motion.img
+                src="/7.svg"
+                alt="HOTT Logo"
+                className="absolute inset-0 h-9 md:h-14 w-auto object-contain"
+                initial={{ clipPath: "inset(0 100% 0 0)" }}
+                animate={{ clipPath: "inset(0 0% 0 0)" }}
+                transition={{ 
+                  duration: 1.2, 
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: 0.2
+                }}
+              />
+            </motion.div>
           )}
         </motion.div>
       )}
