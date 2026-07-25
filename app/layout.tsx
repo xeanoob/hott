@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Montserrat } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
 import { SmoothScroll } from '../components/smooth-scroll'
+import { PageTransition } from '../components/page-transition'
 import { Providers } from './providers'
 import './globals.css'
 
@@ -74,6 +75,7 @@ export default function RootLayout({
       <body className="antialiased bg-black text-white font-sans">
         <SmoothScroll>
           <Providers>
+            <PageTransition />
             {children}
             <CookieConsent />
             {process.env.NODE_ENV === 'production' && <Analytics />}

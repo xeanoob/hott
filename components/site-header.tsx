@@ -3,6 +3,7 @@
 import { User, ShoppingBag, Search, X, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { TransitionLink } from "./transition-link"
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -186,13 +187,13 @@ export function SiteHeader() {
           </div>
 
           <div className="flex flex-1 justify-center md:flex-none">
-            <a href="/" aria-label="HOTT — Accueil" className="flex items-center justify-center">
+            <TransitionLink href="/" aria-label="HOTT — Accueil" className="flex items-center justify-center">
               <img
                 src={useTransparentMode ? "/7.svg" : "/7-black.svg"}
                 alt="HOTT Logo"
                 className="h-9 md:h-14 w-auto object-contain"
               />
-            </a>
+            </TransitionLink>
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-4 md:gap-8 md:flex-none">
@@ -363,7 +364,7 @@ export function SiteHeader() {
                     )
                   },
                 ].map((item) => (
-                  <Link
+                  <TransitionLink
                     key={item.tab}
                     href={`/dashboard?tab=${item.tab}`}
                     onClick={() => setIsAccountOpen(false)}
@@ -371,7 +372,7 @@ export function SiteHeader() {
                   >
                     <span className="text-black/35">{item.icon}</span>
                     {item.label}
-                  </Link>
+                  </TransitionLink>
                 ))}
               </nav>
 
