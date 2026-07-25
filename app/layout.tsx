@@ -4,6 +4,7 @@ import { Cormorant_Garamond, Montserrat } from 'next/font/google'
 import { CookieConsent } from '../components/cookie-consent'
 import { SmoothScroll } from '../components/smooth-scroll'
 import { PageTransition } from '../components/page-transition'
+import { TranslationInit } from '../lib/i18n/TranslationInit'
 import { Providers } from './providers'
 import './globals.css'
 
@@ -75,6 +76,7 @@ export default function RootLayout({
       <body className="antialiased bg-black text-white font-sans">
         <SmoothScroll>
           <Providers>
+            <TranslationInit />
             <PageTransition />
             {children}
             <CookieConsent />

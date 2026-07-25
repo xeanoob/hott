@@ -9,8 +9,10 @@ import { useRouter, usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useCartStore } from "../lib/store/useCartStore"
+import { useTranslationStore, Locale } from "../lib/i18n/useTranslationStore"
 
 export function SiteHeader() {
+  const { dict, locale, setLocale } = useTranslationStore()
   const { data: session, status } = useSession()
   const router = useRouter()
   const pathname = usePathname()
@@ -176,11 +178,11 @@ export function SiteHeader() {
 
             <nav aria-label="Navigation gauche" className="hidden items-center gap-8 md:flex">
               <a href="#collections" className={linkClass}>
-                Nos Collections
+                {dict.header.collections}
                 <span className={underlineClass}></span>
               </a>
               <a href="#histoire" className={linkClass}>
-                Histoire
+                {dict.header.history}
                 <span className={underlineClass}></span>
               </a>
             </nav>
@@ -199,11 +201,11 @@ export function SiteHeader() {
           <div className="flex flex-1 items-center justify-end gap-4 md:gap-8 md:flex-none">
             <nav aria-label="Navigation droite" className="hidden items-center gap-8 md:flex">
               <a href="#technologie" className={linkClass}>
-                Technologie
+                {dict.header.technology}
                 <span className={underlineClass}></span>
               </a>
               <a href="#boutique" className={linkClass}>
-                Boutique
+                {dict.header.store}
                 <span className={underlineClass}></span>
               </a>
             </nav>
@@ -233,6 +235,23 @@ export function SiteHeader() {
               >
                 <ShoppingBag size={18} strokeWidth={1} />
               </button>
+              
+              {/* Language Toggle */}
+              <div className="flex items-center gap-1 border-l border-black/10 pl-4 ml-2">
+                <button 
+                  onClick={() => setLocale("fr")}
+                  className={`font-sans text-[0.65rem] font-semibold uppercase tracking-wider transition-colors ${locale === "fr" ? (useTransparentMode ? "text-white" : "text-black") : (useTransparentMode ? "text-white/40" : "text-black/40")} hover:text-black`}
+                >
+                  FR
+                </button>
+                <span className={useTransparentMode ? "text-white/20" : "text-black/20"}>/</span>
+                <button 
+                  onClick={() => setLocale("en")}
+                  className={`font-sans text-[0.65rem] font-semibold uppercase tracking-wider transition-colors ${locale === "en" ? (useTransparentMode ? "text-white" : "text-black") : (useTransparentMode ? "text-white/40" : "text-black/40")} hover:text-black`}
+                >
+                  EN
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -251,14 +270,14 @@ export function SiteHeader() {
                   <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-black/40" size={20} strokeWidth={1} />
                   <input
                     type="text"
-                    placeholder="Que recherchez-vous ?"
+                    placeholder={dict.header.searchPlaceholder}
                     className="w-full border-b border-black/20 bg-transparent py-3 pl-10 pr-4 font-sans text-lg font-light text-black outline-none transition-colors focus:border-black placeholder:text-black/20"
                     autoFocus
                   />
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="font-sans text-xs font-medium uppercase tracking-widest text-black/40">Populaire :</span>
+                  <span className="font-sans text-xs font-medium uppercase tracking-widest text-black/40">{dict.header.popular}</span>
                   <div className="flex gap-3">
                     {["WARMBIT", "Batterie", "Housse", "Application"].map((term) => (
                       <button key={term} className="font-sans text-xs text-black/60 hover:text-black transition-colors underline underline-offset-4">
@@ -313,51 +332,51 @@ export function SiteHeader() {
           {status === "authenticated" ? (
             <>
               <h2 className="font-sans text-3xl font-semibold tracking-tight text-black">
-                Mon Compte
+                {dict.auth.myAccount}
               </h2>
               <p className="mt-2 font-sans text-sm text-black/50">
-                Bonjour, {session?.user?.name || "Cher(e) Client(e)"}
+                {dict.auth.hello}, {session?.user?.name || "Client"}
               </p>
 
               <nav className="mt-10 flex flex-col">
                 {[
                   {
-                    label: "Tableau de bord", tab: "dashboard", icon: (
+                    label: dict.dashboard.dashboard, tab: "dashboard", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
                       </svg>
                     )
                   },
                   {
-                    label: "Vos commandes", tab: "commandes", icon: (
+                    label: dict.dashboard.orders, tab: "commandes", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" />
                       </svg>
                     )
                   },
                   {
-                    label: "Vos produits", tab: "produits", icon: (
+                    label: dict.dashboard.products, tab: "produits", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
                       </svg>
                     )
                   },
                   {
-                    label: "Carnet d'adresses", tab: "adresses", icon: (
+                    label: dict.dashboard.addresses, tab: "adresses", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
                       </svg>
                     )
                   },
                   {
-                    label: "Vos informations", tab: "informations", icon: (
+                    label: dict.dashboard.info, tab: "informations", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
                       </svg>
                     )
                   },
                   {
-                    label: "Centre d'aide", tab: "aide", icon: (
+                    label: dict.dashboard.help, tab: "aide", icon: (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" />
                       </svg>
@@ -388,7 +407,7 @@ export function SiteHeader() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
                   </svg>
-                  Déconnexion
+                  {dict.auth.logout}
                 </button>
               </div>
             </>
@@ -396,14 +415,14 @@ export function SiteHeader() {
             /* ─── NOT AUTHENTICATED: Auth form ─── */
             <>
               <motion.h2 layout className="font-sans text-3xl font-semibold tracking-tight text-black">
-                {authStep === "email" ? "Connexion" : authStep === "login" ? "Bon retour" : "Créer un compte"}
+                {authStep === "email" ? dict.auth.login : authStep === "login" ? dict.auth.welcomeBack : dict.auth.createAccount}
               </motion.h2>
               <motion.p layout className="mt-2 font-sans text-sm text-black/60">
                 {authStep === "email"
-                  ? "Saisissez votre e-mail pour continuer."
+                  ? dict.auth.enterEmail
                   : authStep === "login"
-                    ? "Veuillez saisir votre mot de passe pour vous connecter."
-                    : "Complétez vos informations pour créer votre espace privilégié."}
+                    ? dict.auth.enterPassword
+                    : dict.auth.completeInfo}
               </motion.p>
 
               {error && (
@@ -495,12 +514,12 @@ export function SiteHeader() {
                   className="mt-6 w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black disabled:opacity-70"
                 >
                   {isLoading
-                    ? "Chargement..."
+                    ? dict.auth.loading
                     : authStep === "email"
-                      ? "Continuer"
+                      ? dict.auth.continue
                       : authStep === "login"
-                        ? "Se connecter"
-                        : "Créer mon compte"}
+                        ? dict.auth.loginBtn
+                        : dict.auth.createBtn}
                 </motion.button>
 
                 {authStep === "email" && (
@@ -522,7 +541,7 @@ export function SiteHeader() {
                         <path fill="#FBBC05" d="M5.32 14.27c-.24-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.62H1.21C.44 8.16 0 9.88 0 11.7c0 1.82.44 3.54 1.21 5.08l4.11-3.11z" />
                         <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 6.62l4.11 3.11c.94-2.85 3.57-4.98 6.68-4.98z" />
                       </svg>
-                      Continuer avec Google
+                      {dict.auth.continueWithGoogle}
                     </button>
                   </motion.div>
                 )}
@@ -541,7 +560,7 @@ export function SiteHeader() {
                       onClick={() => setAuthStep("email")}
                       className="font-sans text-xs font-medium text-black/60 underline-offset-4 transition-colors hover:text-black hover:underline"
                     >
-                      Utiliser une autre adresse e-mail
+                      {dict.auth.useAnotherEmail}
                     </button>
                   </motion.div>
                 )}
@@ -573,19 +592,19 @@ export function SiteHeader() {
         </button>
 
         <div className="mt-20 flex h-full flex-col">
-          <h2 className="font-sans text-3xl font-semibold tracking-tight text-black">Votre Panier</h2>
+          <h2 className="font-sans text-3xl font-semibold tracking-tight text-black">{dict.cart.title}</h2>
 
           {cartItems.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center">
               <ShoppingBag size={48} strokeWidth={1} className="mb-6 text-black/20" />
-              <p className="font-sans text-lg font-medium text-black/60">Votre panier est vide.</p>
-              <p className="mt-2 font-sans text-sm text-black/40">Découvrez nos collections pour commencer vos achats.</p>
+              <p className="font-sans text-lg font-medium text-black/60">{dict.cart.empty}</p>
+              <p className="mt-2 font-sans text-sm text-black/40">{dict.cart.emptyDesc}</p>
 
               <button
                 onClick={() => setIsCartOpen(false)}
                 className="mt-8 border border-black px-8 py-4 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-black hover:text-white"
               >
-                Continuer mes achats
+                {dict.cart.continueShopping}
               </button>
             </div>
           ) : (
@@ -604,7 +623,7 @@ export function SiteHeader() {
                             <X size={16} />
                           </button>
                         </div>
-                        <p className="font-sans text-sm text-black/50">Qté: {item.quantity}</p>
+                        <p className="font-sans text-sm text-black/50">{dict.cart.qty}: {item.quantity}</p>
                       </div>
                       <p className="font-sans text-sm font-semibold tracking-widest text-[#c5a880]">{item.price}€</p>
                     </div>
@@ -614,14 +633,16 @@ export function SiteHeader() {
               
               <div className="border-t border-black/10 pt-6 mt-6 pb-8">
                 <div className="flex justify-between font-sans text-lg font-semibold text-black mb-6">
-                  <span>Total</span>
+                  <span>{dict.cart.total}</span>
                   <span>{cartTotal}€</span>
                 </div>
-                <button
-                  className="w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black"
+                <TransitionLink
+                  href="/checkout"
+                  onClick={() => setIsCartOpen(false)}
+                  className="flex justify-center items-center w-full border border-black bg-black py-4 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-transparent hover:text-black"
                 >
-                  Commander
-                </button>
+                  {dict.cart.checkout}
+                </TransitionLink>
               </div>
             </div>
           )}
@@ -651,10 +672,10 @@ export function SiteHeader() {
 
         <div className="mt-20 flex h-full flex-col justify-between">
           <nav className="flex flex-col gap-6">
-            <a href="#collections" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Nos Collections</a>
-            <a href="#histoire" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Histoire</a>
-            <a href="#technologie" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Technologie</a>
-            <a href="#boutique" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">Boutique</a>
+            <a href="#collections" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.collections}</a>
+            <a href="#histoire" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.history}</a>
+            <a href="#technologie" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.technology}</a>
+            <a href="#boutique" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.store}</a>
           </nav>
 
           <div className="border-t border-black/10 pt-6">

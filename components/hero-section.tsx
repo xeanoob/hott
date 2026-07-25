@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useTranslationStore } from "../lib/i18n/useTranslationStore"
 
 export function HeroSection() {
+  const { dict } = useTranslationStore()
   return (
     <section className="relative flex h-screen w-full flex-col items-center justify-end overflow-hidden bg-black">
       <video 
@@ -26,10 +28,10 @@ export function HeroSection() {
       >
         <div className="max-w-2xl text-left">
           <h1 className="font-serif text-4xl font-normal tracking-[0.15em] text-white md:text-6xl lg:text-7xl uppercase">
-            HOTT
+            {dict.hero.title}
           </h1>
           <p className="mt-4 max-w-xl text-pretty font-serif text-lg italic tracking-wide text-white/90 md:text-xl">
-            Parce que ton cheval le vaut bien.
+            {dict.hero.subtitle}
           </p>
         </div>
         
@@ -38,7 +40,7 @@ export function HeroSection() {
             href="#boutique"
             className="inline-block border border-white bg-transparent px-10 py-4 font-sans text-[0.65rem] font-medium uppercase tracking-[0.25em] text-white transition-colors duration-300 hover:bg-white hover:text-black"
           >
-            Découvrir la collection
+            {dict.hero.cta}
           </a>
         </div>
       </motion.div>

@@ -1,0 +1,65 @@
+{
+  "header": {
+    "collections": "Collections",
+    "history": "History",
+    "technology": "Technology",
+    "store": "Boutique",
+    "searchPlaceholder": "What are you looking for?",
+    "popular": "Popular:"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "emptyDesc": "Discover our collections to start shopping.",
+    "continueShopping": "Continue Shopping",
+    "qty": "Qty",
+    "total": "Total",
+    "checkout": "Checkout"
+  },
+  "auth": {
+    "login": "Login",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create an Account",
+    "enterEmail": "Enter your email to continue.",
+    "enterPassword": "Please enter your password to login.",
+    "completeInfo": "Complete your information to create your private space.",
+    "emailLabel": "Email address",
+    "nameLabel": "First and Last Name",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot?",
+    "continue": "Continue",
+    "loginBtn": "Login",
+    "createBtn": "Create Account",
+    "loading": "Loading...",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "useAnotherEmail": "Use another email address",
+    "myAccount": "My Account",
+    "hello": "Hello",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard",
+    "orders": "Your orders",
+    "products": "Your products",
+    "addresses": "Address book",
+    "info": "Your information",
+    "help": "Help center"
+  },
+  "hero": {
+    "title": "HOTT",
+    "subtitle": "Because your horse is worth it.",
+    "cta": "Discover the collection",
+    "scroll": "Scroll"
+  },
+  "founder": {
+    "title": "A Word from the Founder",
+    "p1": "I have been a rider for many years. And like many of you, I learned to read my horse long before I truly learned to ride.",
+    "p2": "I've always had a simple philosophy, one that some coaches don't necessarily share: I never try to make a horse submit. I prefer to repeat, vary, play — start over differently until the right movement becomes obvious to him, not a constraint. Because he didn't ask for anything. He is there, noble, generous, and he trusts us. It is up to us to be worthy of that.",
+    "p3": "It was with this mindset that I observed, one winter, something I could no longer ignore. Horses raising their heads. Stepping back. Clenching their teeth. Not out of ill will — out of discomfort. An icy bit in the mouth is not a detail. For such a sensitive animal, it is an assault.",
+    "p4": "I looked for a solution. I couldn't find one. So I created it.",
+    "p5": "HOTT is my way of giving back to the horse a part of what he gives us. This silent partner who carries our weight, our moods, our difficult days — and who still sets off the next day with the same generosity. He deserves at the very least that we think of him before even putting on his bridle.",
+    "p6": "WARMBIT was born from this conviction: your horse's comfort is not a luxury. It is the foundation. And if we can make it accessible to all riders, then we will have done something worthwhile.",
+    "signature": "The HOTT Founder"
+  }
+}

@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { TextReveal } from "./text-reveal"
+import { useTranslationStore } from "../lib/i18n/useTranslationStore"
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -12,6 +13,7 @@ const fadeUp = {
 }
 
 export function FounderWordSection() {
+  const { dict } = useTranslationStore()
   const containerRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -41,7 +43,7 @@ export function FounderWordSection() {
           className="md:col-span-5 flex flex-col gap-12"
         >
           <TextReveal
-            text="Mot du Fondateur"
+            text={dict.founder.title}
             className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[#c5a880]"
           />
           
@@ -59,32 +61,32 @@ export function FounderWordSection() {
         {/* Colonne de droite (Texte) */}
         <div className="md:col-span-6 md:col-start-7 flex flex-col gap-8 font-sans text-lg md:text-xl font-light leading-[1.7] text-black/80">
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.05 }}>
-            Je suis cavalier depuis plusieurs années. Et comme beaucoup d'entre vous, j'ai appris à lire mon cheval bien avant d'apprendre à le monter vraiment.
+            {dict.founder.p1}
           </motion.p>
           
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.1 }}>
-            J'ai toujours eu une philosophie simple, que certains coaches ne partagent pas forcément : je ne cherche jamais à faire céder un cheval. Je préfère répéter, varier, jouer — recommencer autrement jusqu'à ce que le bon mouvement devienne une évidence pour lui, pas une contrainte. Parce qu'il n'a rien demandé, lui. Il est là, noble, généreux, et il nous fait confiance. C'est à nous d'être à la hauteur de ça.
+            {dict.founder.p2}
           </motion.p>
           
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.15 }}>
-            C'est avec cet état d'esprit que j'ai observé, un hiver, quelque chose que je n'arrivais plus à ignorer. Des chevaux qui lèvent la tête. Qui reculent. Qui serrent les dents. Pas par mauvaise volonté — par inconfort. Un mors glacé dans la bouche, ce n'est pas un détail. Pour un animal aussi sensible, c'est une agression.
+            {dict.founder.p3}
           </motion.p>
           
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.2 }} className="text-black font-medium">
-            J'ai cherché une solution. Je n'en ai pas trouvé. Alors je l'ai créée.
+            {dict.founder.p4}
           </motion.p>
           
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.25 }}>
-            HOTT, c'est ma façon de rendre à l'équidé une partie de ce qu'il nous donne. Ce partenaire silencieux qui porte notre poids, nos humeurs, nos journées difficiles — et qui repart quand même le lendemain avec la même générosité. Il mérite au minimum qu'on pense à lui avant même de lui mettre la bride.
+            {dict.founder.p5}
           </motion.p>
           
           <motion.p {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.3 }}>
-            WARMBIT est né de cette conviction : le confort de votre cheval n'est pas un luxe. C'est la base. Et si on peut le rendre accessible à tous les cavaliers, alors on aura fait quelque chose qui en vaut la peine.
+            {dict.founder.p6}
           </motion.p>
 
           <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.35 }} className="mt-8 pt-8 border-t border-black/10">
             <p className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black">
-              Le Fondateur HOTT
+              {dict.founder.signature}
             </p>
           </motion.div>
         </div>

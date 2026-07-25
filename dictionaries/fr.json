@@ -1,0 +1,65 @@
+{
+  "header": {
+    "collections": "Nos Collections",
+    "history": "Histoire",
+    "technology": "Technologie",
+    "store": "Boutique",
+    "searchPlaceholder": "Que recherchez-vous ?",
+    "popular": "Populaire :"
+  },
+  "cart": {
+    "title": "Votre Panier",
+    "empty": "Votre panier est vide.",
+    "emptyDesc": "Découvrez nos collections pour commencer vos achats.",
+    "continueShopping": "Continuer mes achats",
+    "qty": "Qté",
+    "total": "Total",
+    "checkout": "Commander"
+  },
+  "auth": {
+    "login": "Connexion",
+    "welcomeBack": "Bon retour",
+    "createAccount": "Créer un compte",
+    "enterEmail": "Saisissez votre e-mail pour continuer.",
+    "enterPassword": "Veuillez saisir votre mot de passe pour vous connecter.",
+    "completeInfo": "Complétez vos informations pour créer votre espace privilégié.",
+    "emailLabel": "Adresse e-mail",
+    "nameLabel": "Prénom et Nom",
+    "passwordLabel": "Mot de passe",
+    "forgotPassword": "Oublié ?",
+    "continue": "Continuer",
+    "loginBtn": "Se connecter",
+    "createBtn": "Créer mon compte",
+    "loading": "Chargement...",
+    "or": "ou",
+    "continueWithGoogle": "Continuer avec Google",
+    "useAnotherEmail": "Utiliser une autre adresse e-mail",
+    "myAccount": "Mon Compte",
+    "hello": "Bonjour",
+    "logout": "Déconnexion"
+  },
+  "dashboard": {
+    "dashboard": "Tableau de bord",
+    "orders": "Vos commandes",
+    "products": "Vos produits",
+    "addresses": "Carnet d'adresses",
+    "info": "Vos informations",
+    "help": "Centre d'aide"
+  },
+  "hero": {
+    "title": "HOTT",
+    "subtitle": "Parce que ton cheval le vaut bien.",
+    "cta": "Découvrir la collection",
+    "scroll": "Défilez"
+  },
+  "founder": {
+    "title": "Mot du Fondateur",
+    "p1": "Je suis cavalier depuis plusieurs années. Et comme beaucoup d'entre vous, j'ai appris à lire mon cheval bien avant d'apprendre à le monter vraiment.",
+    "p2": "J'ai toujours eu une philosophie simple, que certains coaches ne partagent pas forcément : je ne cherche jamais à faire céder un cheval. Je préfère répéter, varier, jouer — recommencer autrement jusqu'à ce que le bon mouvement devienne une évidence pour lui, pas une contrainte. Parce qu'il n'a rien demandé, lui. Il est là, noble, généreux, et il nous fait confiance. C'est à nous d'être à la hauteur de ça.",
+    "p3": "C'est avec cet état d'esprit que j'ai observé, un hiver, quelque chose que je n'arrivais plus à ignorer. Des chevaux qui lèvent la tête. Qui reculent. Qui serrent les dents. Pas par mauvaise volonté — par inconfort. Un mors glacé dans la bouche, ce n'est pas un détail. Pour un animal aussi sensible, c'est une agression.",
+    "p4": "J'ai cherché une solution. Je n'en ai pas trouvé. Alors je l'ai créée.",
+    "p5": "HOTT, c'est ma façon de rendre à l'équidé une partie de ce qu'il nous donne. Ce partenaire silencieux qui porte notre poids, nos humeurs, nos journées difficiles — et qui repart quand même le lendemain avec la même générosité. Il mérite au minimum qu'on pense à lui avant même de lui mettre la bride.",
+    "p6": "WARMBIT est né de cette conviction : le confort de votre cheval n'est pas un luxe. C'est la base. Et si on peut le rendre accessible à tous les cavaliers, alors on aura fait quelque chose qui en vaut la peine.",
+    "signature": "Le Fondateur HOTT"
+  }
+}
