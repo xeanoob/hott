@@ -15,9 +15,19 @@ interface TranslationStore {
 
 const getInitialLocale = (): Locale => {
   if (typeof document !== "undefined") {
+    // 1. Check if the user already has a saved preference in cookies
     const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'))
     if (match && (match[2] === "fr" || match[2] === "en")) {
       return match[2] as Locale
+    }
+    
+    // 2. If no cookie, check the browser's language/locale settings
+    if (typeof navigator !== "undefined" && navigator.language) {
+      if (navigator.language.toLowerCase().startsWith('fr')) {
+        return 'fr'
+      }
+      // For any other country/location, default to English
+      return 'en'
     }
   }
   return "fr"
