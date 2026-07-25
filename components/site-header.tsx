@@ -235,23 +235,6 @@ export function SiteHeader() {
               >
                 <ShoppingBag size={18} strokeWidth={1} />
               </button>
-              
-              {/* Language Toggle */}
-              <div className="flex items-center gap-1 border-l border-black/10 pl-4 ml-2">
-                <button 
-                  onClick={() => setLocale("fr")}
-                  className={`font-sans text-[0.65rem] font-semibold uppercase tracking-wider transition-colors ${locale === "fr" ? (useTransparentMode ? "text-white" : "text-black") : (useTransparentMode ? "text-white/40" : "text-black/40")} hover:text-black`}
-                >
-                  FR
-                </button>
-                <span className={useTransparentMode ? "text-white/20" : "text-black/20"}>/</span>
-                <button 
-                  onClick={() => setLocale("en")}
-                  className={`font-sans text-[0.65rem] font-semibold uppercase tracking-wider transition-colors ${locale === "en" ? (useTransparentMode ? "text-white" : "text-black") : (useTransparentMode ? "text-white/40" : "text-black/40")} hover:text-black`}
-                >
-                  EN
-                </button>
-              </div>
             </div>
           </div>
         </div>
