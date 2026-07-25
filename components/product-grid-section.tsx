@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { TextReveal } from "./text-reveal"
 
 const products = [
   {
@@ -9,6 +10,7 @@ const products = [
     subtitle: "Original",
     desc: "La révolution thermique pour le bien-être de votre cheval.",
     image: "/hott-detail.png",
+    macroImage: "/hott-macro1.png",
     price: "À partir de 189€"
   },
   {
@@ -16,6 +18,7 @@ const products = [
     subtitle: "Pro",
     desc: "Pour les cavaliers exigeants. Performance sans compromis.",
     image: "/hott-detail.png",
+    macroImage: "/hott-macro2.png",
     price: "À partir de 249€"
   },
 ]
@@ -39,12 +42,11 @@ export function ProductGridSection() {
         >
           La Collection
         </motion.span>
-        <motion.h2
-          {...fadeUp}
+        
+        <TextReveal 
+          text="L'expérience HOTT."
           className="max-w-2xl font-sans text-4xl font-semibold tracking-tight text-black md:text-6xl"
-        >
-          L'expérience HOTT.
-        </motion.h2>
+        />
 
         {/* Asymmetric product rectangles */}
         <div className="mt-24 flex flex-col gap-20 md:gap-32">
@@ -57,7 +59,13 @@ export function ProductGridSection() {
                   src={products[0].image}
                   alt={products[0].name}
                   fill
-                  className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                  className="object-cover transition-all duration-[1.2s] ease-[0.22,1,0.36,1] group-hover:scale-105"
+                />
+                <Image
+                  src={products[0].macroImage}
+                  alt={products[0].name + " Macro"}
+                  fill
+                  className="object-cover opacity-0 transition-all duration-[0.8s] ease-[0.22,1,0.36,1] group-hover:opacity-100 group-hover:scale-110"
                 />
               </div>
               <div className="p-8 md:p-12">
@@ -88,7 +96,13 @@ export function ProductGridSection() {
                   src={products[1].image}
                   alt={products[1].name}
                   fill
-                  className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                  className="object-cover transition-all duration-[1.2s] ease-[0.22,1,0.36,1] group-hover:scale-105"
+                />
+                <Image
+                  src={products[1].macroImage}
+                  alt={products[1].name + " Macro"}
+                  fill
+                  className="object-cover opacity-0 transition-all duration-[0.8s] ease-[0.22,1,0.36,1] group-hover:opacity-100 group-hover:scale-110"
                 />
               </div>
               <div className="p-8 md:p-12">

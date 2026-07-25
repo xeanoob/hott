@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
+import { TextReveal } from "./text-reveal"
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -39,9 +40,10 @@ export function FounderWordSection() {
           {...fadeUp}
           className="md:col-span-5 flex flex-col gap-12"
         >
-          <span className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[#c5a880]">
-            Mot du Fondateur
-          </span>
+          <TextReveal
+            text="Mot du Fondateur"
+            className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[#c5a880]"
+          />
           
           {/* Image style magazine, adaptée pour mobile (carrée) et desktop (portrait) */}
           <div className="relative w-full aspect-square md:aspect-[3/4] overflow-hidden mt-6 md:mt-0">
