@@ -12,15 +12,15 @@ export function PageTransition() {
   
   // When pathname changes, we ensure the transition curtain is lifted
   useEffect(() => {
-    // If the transition was started by a link click, we end it when the route changes.
-    // We add a tiny delay so the next page has a moment to render before the curtain lifts.
-    if (isAnimating) {
+    // We only lift the curtain when the route ACTUALLY changes.
+    if (useTransitionStore.getState().isAnimating) {
       const timer = setTimeout(() => {
         endTransition()
-      }, 500)
+      }, 300) // Small delay to allow the new page to render before lifting the curtain
       return () => clearTimeout(timer)
     }
-  }, [pathname, isAnimating, endTransition])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, endTransition])
 
   return (
     <AnimatePresence>
