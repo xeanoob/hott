@@ -191,7 +191,6 @@ export function SiteHeader() {
                 src={useTransparentMode ? "/7.svg" : "/7-black.svg"}
                 alt="HOTT Logo"
                 className="h-9 md:h-14 w-auto object-contain"
-                style={{ imageRendering: "-webkit-optimize-contrast" }}
               />
             </a>
           </div>
