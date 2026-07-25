@@ -62,22 +62,31 @@ export function SplashScreen() {
               <img
                 src="/7.svg"
                 alt="HOTT Logo Faint"
-                className="h-full w-auto object-contain opacity-20"
+                className="absolute inset-0 h-full w-full object-contain opacity-20"
+                style={{ transform: "translateZ(0)", willChange: "transform" }}
               />
               
-              {/* Reveal logo */}
-              <motion.img
-                src="/7.svg"
-                alt="HOTT Logo"
-                className="absolute inset-0 h-full w-auto object-contain"
-                initial={{ clipPath: "inset(0 100% 0 0)" }}
-                animate={{ clipPath: "inset(0 0% 0 0)" }}
-                transition={{ 
-                  duration: 1.2, 
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.2
-                }}
-              />
+              {/* Logo complet, caché initialement par un masque noir */}
+              <div className="relative h-full w-auto">
+                <img
+                  src="/7.svg"
+                  alt="HOTT Logo"
+                  className="h-full w-auto object-contain"
+                  style={{ transform: "translateZ(0)", willChange: "transform" }}
+                />
+                
+                {/* Masque noir qui glisse vers la droite pour révéler */}
+                <motion.div
+                  className="absolute inset-0 bg-black origin-right"
+                  initial={{ scaleX: 1 }}
+                  animate={{ scaleX: 0 }}
+                  transition={{ 
+                    duration: 1.2, 
+                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.2
+                  }}
+                />
+              </div>
             </motion.div>
           )}
         </motion.div>
