@@ -69,7 +69,7 @@ export function ProductGridSection() {
           {/* Product 1 — large, offset left */}
           <motion.div {...fadeUp} className="flex justify-start">
             <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[75%]">
-              <div className="relative aspect-[16/10] w-full overflow-hidden">
+              <div className="relative aspect-[4/5] md:aspect-[16/10] w-full overflow-hidden">
                 <ParallaxImage
                   src={products[0].image}
                   alt={products[0].name}
@@ -95,7 +95,7 @@ export function ProductGridSection() {
                 </p>
                 <div className="mt-8">
                   <MagneticButton onClick={() => handleAddToCart(products[0])}>
-                    <div className="inline-block border border-black bg-black px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-transparent hover:text-black">
+                    <div className="inline-block w-full text-center md:w-auto border border-black bg-black px-8 py-4 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-transparent hover:text-black">
                       Ajouter au panier
                     </div>
                   </MagneticButton>
@@ -105,9 +105,9 @@ export function ProductGridSection() {
           </motion.div>
 
           {/* Product 2 — smaller, offset right */}
-          <motion.div {...fadeUp} className="flex justify-end">
+          <motion.div {...fadeUp} className="flex md:justify-end mt-12 md:mt-0">
             <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[60%]">
-              <div className="relative aspect-[4/3] w-full overflow-hidden">
+              <div className="relative aspect-[4/5] md:aspect-[4/3] w-full overflow-hidden">
                 <ParallaxImage
                   src={products[1].image}
                   alt={products[1].name}
@@ -133,7 +133,7 @@ export function ProductGridSection() {
                 </p>
                 <div className="mt-8">
                   <MagneticButton onClick={() => handleAddToCart(products[1])}>
-                    <div className="inline-block border border-black/20 bg-transparent px-8 py-3.5 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black/60 transition-all duration-300 hover:border-black hover:text-black">
+                    <div className="inline-block w-full text-center md:w-auto border border-black/20 bg-transparent px-8 py-4 font-sans text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black/60 transition-all duration-300 hover:border-black hover:text-black">
                       Ajouter au panier
                     </div>
                   </MagneticButton>

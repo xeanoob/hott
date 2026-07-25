@@ -25,7 +25,7 @@ export function FounderWordSection() {
 
   return (
     // Le fond n'est plus blanc pur, mais un beige crème très subtil et luxueux (#f9f8f6)
-    <section ref={containerRef} className="relative w-full bg-[#f9f8f6] px-6 py-24 md:px-12 lg:py-40 overflow-hidden">
+    <section ref={containerRef} className="relative w-full bg-[#f9f8f6] px-8 py-28 md:px-12 lg:py-40 overflow-hidden">
       
       {/* Dégradé de transition ULTRA fluide : fond noir vers fond crème */}
       <div 
@@ -47,8 +47,8 @@ export function FounderWordSection() {
             className="font-sans text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[#c5a880]"
           />
           
-          {/* Image style magazine, adaptée pour mobile (carrée) et desktop (portrait) */}
-          <div className="relative w-full aspect-square md:aspect-[3/4] overflow-hidden mt-6 md:mt-0">
+          {/* Image style magazine, adaptée pour mobile (portrait 4:5) et desktop (portrait 3:4) */}
+          <div className="relative w-full aspect-[4/5] md:aspect-[3/4] overflow-hidden mt-6 md:mt-0">
             <motion.img 
               style={{ y: imageY, scale: 1.15 }}
               src="/hott-hero.png" 

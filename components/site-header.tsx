@@ -647,18 +647,17 @@ export function SiteHeader() {
       >
         <button
           onClick={() => setIsMobileMenuOpen(false)}
-          className="absolute right-8 top-8 flex items-center gap-2 text-black/60 transition-colors hover:text-black"
+          className="absolute right-8 top-8 flex items-center justify-center w-12 h-12 rounded-full border border-black/10 text-black/60 transition-colors hover:text-black hover:border-black"
         >
-          <span className="font-sans text-xs font-semibold uppercase tracking-widest">Fermer</span>
           <X size={18} strokeWidth={1} />
         </button>
 
         <div className="mt-20 flex h-full flex-col justify-between">
-          <nav className="flex flex-col gap-6">
-            <a href="#collections" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.collections}</a>
-            <a href="#histoire" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.history}</a>
-            <a href="#technologie" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.technology}</a>
-            <a href="#boutique" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-lg font-medium text-black/80 uppercase tracking-widest hover:text-black">{dict.header.store}</a>
+          <nav className="flex flex-col gap-8">
+            <a href="#collections" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-2xl font-light text-black/90 tracking-wide hover:text-black transition-colors">{dict.header.collections}</a>
+            <a href="#histoire" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-2xl font-light text-black/90 tracking-wide hover:text-black transition-colors">{dict.header.history}</a>
+            <a href="#technologie" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-2xl font-light text-black/90 tracking-wide hover:text-black transition-colors">{dict.header.technology}</a>
+            <a href="#boutique" onClick={() => setIsMobileMenuOpen(false)} className="font-sans text-2xl font-light text-black/90 tracking-wide hover:text-black transition-colors">{dict.header.store}</a>
           </nav>
 
           <div className="border-t border-black/10 pt-6">

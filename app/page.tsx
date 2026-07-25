@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SplashScreen } from "@/components/splash-screen"
 import { HeroSection } from "@/components/hero-section"
 import { FounderWordSection } from "@/components/founder-word-section"
+import { ThreeDSection } from "@/components/three-d-section"
 import { ProductGridSection } from "@/components/product-grid-section"
 import { AmbassadorSection } from "@/components/ambassador-section"
 import { MissionSection } from "@/components/mission-section"
@@ -14,6 +15,7 @@ export default function Home() {
       <SplashScreen />
       <SiteHeader />
       <HeroSection />
+      <ThreeDSection />
       <FounderWordSection />
       <ProductGridSection />
       <AmbassadorSection />

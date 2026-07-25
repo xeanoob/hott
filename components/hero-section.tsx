@@ -27,7 +27,7 @@ export function HeroSection() {
         className="relative z-10 flex w-full flex-col md:flex-row md:items-end md:justify-between gap-8 px-6 md:px-12"
       >
         <div className="max-w-2xl text-left">
-          <h1 className="font-serif text-4xl font-normal tracking-[0.15em] text-white md:text-6xl lg:text-7xl uppercase">
+          <h1 className="font-serif text-5xl font-normal tracking-[0.15em] text-white md:text-6xl lg:text-7xl uppercase">
             {dict.hero.title}
           </h1>
           <p className="mt-4 max-w-xl text-pretty font-serif text-lg italic tracking-wide text-white/90 md:text-xl">
@@ -38,7 +38,7 @@ export function HeroSection() {
         <div className="flex-shrink-0 text-left md:text-right">
           <a
             href="#boutique"
-            className="inline-block border border-white bg-transparent px-10 py-4 font-sans text-[0.65rem] font-medium uppercase tracking-[0.25em] text-white transition-colors duration-300 hover:bg-white hover:text-black"
+            className="inline-block border border-white bg-transparent px-8 md:px-10 py-4 font-sans text-[0.65rem] font-medium uppercase tracking-[0.25em] text-white transition-colors duration-300 hover:bg-white hover:text-black"
           >
             {dict.hero.cta}
           </a>
