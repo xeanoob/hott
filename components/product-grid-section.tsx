@@ -67,7 +67,7 @@ export function ProductGridSection() {
 
           {/* Product 1 — large, offset left */}
           <motion.div {...fadeUp} className="flex justify-start">
-            <div className="group relative w-full cursor-pointer overflow-hidden bg-[#f5f3ef] md:w-[75%]">
+            <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[75%]">
               <div className="relative aspect-[16/10] w-full overflow-hidden">
                 <Image
                   src={products[0].image}
@@ -105,7 +105,7 @@ export function ProductGridSection() {
 
           {/* Product 2 — smaller, offset right */}
           <motion.div {...fadeUp} className="flex justify-end">
-            <div className="group relative w-full cursor-pointer overflow-hidden bg-[#f5f3ef] md:w-[60%]">
+            <div className="group relative w-full overflow-hidden bg-[#f5f3ef] md:w-[60%]">
               <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <Image
                   src={products[1].image}
